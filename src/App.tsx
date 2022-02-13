@@ -14,6 +14,8 @@ import {
   View,
 } from 'react-native';
 
+import I18n from '../assets/locales/i18n';
+
 export interface Folder {
   name: string;
 }
@@ -92,7 +94,7 @@ const App = () => {
             style={{
               fontSize: 32,
             }}>
-            フォルダ
+            {I18n.t('welcome')}
           </Text>
         </View>
         <View
