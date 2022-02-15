@@ -1,3 +1,4 @@
 export default {
-  welcome: "ようこそ",
+  folder: 'フォルダ',
+  search: '検索',
 };

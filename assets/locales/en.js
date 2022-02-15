@@ -1,5 +1,4 @@
 export default {
-  welcome: "welcome"
+  folder: 'folder',
+  search: 'search',
 };
-
-
