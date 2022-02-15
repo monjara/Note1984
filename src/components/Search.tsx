@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TextInput } from 'react-native';
+import {View, TextInput} from 'react-native';
 import I18n from '../../assets/locales/i18n';
 
 type Props = {
@@ -16,22 +16,15 @@ const Search: React.VFC<Props> = ({
   borderRadius = 5,
 }) => {
   return (
-    <View
+    <TextInput
       style={{
         height: height,
         borderWidth: borderWidth,
         borderRadius: borderRadius,
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}>
-      <TextInput
-        style={{
-          height: height,
-          fontSize: fontSize,
-        }}
-        placeholder={I18n.t('search')}
-      />
-    </View>
+        fontSize: fontSize,
+      }}
+      placeholder={I18n.t('search')}
+    />
   );
 };
 
