@@ -7,7 +7,6 @@ import {
   ScrollView,
   StatusBar,
   Text,
-  TextInput,
   TouchableOpacity,
   useColorScheme,
   useWindowDimensions,
@@ -15,6 +14,8 @@ import {
 } from 'react-native';
 
 import I18n from '../assets/locales/i18n';
+
+import Search from './components/Search';
 
 export interface Folder {
   name: string;
@@ -34,8 +35,8 @@ const sampleFolders = [
 ];
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
   const {height, width} = useWindowDimensions();
+  const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? 'black' : 'white',
@@ -83,7 +84,7 @@ const App = () => {
               flexDirection: 'row',
               justifyContent: 'flex-end',
             }}>
-            <Text style={{}}>編集</Text>
+            <Text>{I18n.t('edit')}</Text>
           </View>
         </View>
         <View
@@ -94,25 +95,10 @@ const App = () => {
             style={{
               fontSize: 32,
             }}>
-            {I18n.t('welcome')}
+            {I18n.t('folder')}
           </Text>
         </View>
-        <View
-          style={{
-            height: height * 0.06,
-            borderWidth: 2,
-            borderRadius: 5,
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}>
-          <TextInput
-            style={{
-              height: height * 0.06,
-              fontSize: 10,
-            }}
-            placeholder="検索"
-          />
-        </View>
+        <Search height={height * 0.06} />
         {/**
         <Text>iCloud</Text>
 */}
