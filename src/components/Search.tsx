@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TextInput} from 'react-native';
+import {TextInput} from 'react-native';
 import I18n from '../../assets/locales/i18n';
 
 type Props = {
