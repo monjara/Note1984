@@ -1,14 +1,9 @@
 import React from 'react';
 import {
-  FlatList,
-  Image,
-  ListRenderItemInfo,
   SafeAreaView,
   ScrollView,
   StatusBar,
   Text,
-  TextInput,
-  TouchableOpacity,
   useColorScheme,
   useWindowDimensions,
   View,
@@ -16,52 +11,14 @@ import {
 
 import I18n from '../assets/locales/i18n';
 
-export interface Folder {
-  name: string;
-}
-
-const sampleFolders = [
-  {name: 'sample1'},
-  {name: 'sample2'},
-  {name: 'sample3'},
-  {name: 'sample4'},
-  {name: 'sample5'},
-  {name: 'sample6'},
-  {name: 'sample7'},
-  {name: 'sample8'},
-  {name: 'sample9'},
-  {name: 'sample10'},
-];
+import FoldersScreen from './screens/FoldersScreen';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
   const {height, width} = useWindowDimensions();
+  const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? 'black' : 'white',
-  };
-
-  const renderFolders: React.FC<
-    ListRenderItemInfo<Folder>
-  > = listRenderItemInfo => {
-    return (
-      <View style={{width: width * 0.3}}>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}>
-          <Image
-            source={require('../assets/image/folder.png')}
-            style={{
-              width: 80,
-              height: 80,
-            }}
-          />
-          <Text>{listRenderItemInfo.item.name}</Text>
-        </TouchableOpacity>
-      </View>
-    );
   };
 
   return (
@@ -83,45 +40,10 @@ const App = () => {
               flexDirection: 'row',
               justifyContent: 'flex-end',
             }}>
-            <Text style={{}}>編集</Text>
+            <Text>{I18n.t('edit')}</Text>
           </View>
         </View>
-        <View
-          style={{
-            height: height * 0.1,
-          }}>
-          <Text
-            style={{
-              fontSize: 32,
-            }}>
-            {I18n.t('welcome')}
-          </Text>
-        </View>
-        <View
-          style={{
-            height: height * 0.06,
-            borderWidth: 2,
-            borderRadius: 5,
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}>
-          <TextInput
-            style={{
-              height: height * 0.06,
-              fontSize: 10,
-            }}
-            placeholder="検索"
-          />
-        </View>
-        {/**
-        <Text>iCloud</Text>
-*/}
-        <FlatList
-          data={sampleFolders}
-          renderItem={renderFolders}
-          keyExtractor={item => item.name}
-          numColumns={3}
-        />
+        <FoldersScreen />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={backgroundStyle}></ScrollView>
