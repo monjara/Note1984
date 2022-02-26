@@ -11,7 +11,7 @@ import {
 
 import I18n from '../assets/locales/i18n';
 
-import FoldersScreen from './screens/FoldersScreen';
+import NotesScreen from './screens/NotesScreen';
 
 const App = () => {
   const {height, width} = useWindowDimensions();
@@ -43,7 +43,7 @@ const App = () => {
             <Text>{I18n.t('edit')}</Text>
           </View>
         </View>
-        <FoldersScreen />
+        <NotesScreen />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={backgroundStyle}></ScrollView>

@@ -55,9 +55,6 @@ const FoldersScreen: React.VFC = () => {
     <>
       <Title title={'folder'} height={height * 0.1} />
       <Search height={height * 0.06} />
-      {/**
-        <Text>iCloud</Text>
-*/}
       <FlatList
         data={sampleFolders}
         renderItem={renderFolders}

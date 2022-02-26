@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, View} from 'react-native';
-import I18n from '../../assets/locales/i18n';
+import {View} from 'react-native';
+import AppText from './custom/AppText';
 
 type TitleProps = {
   title: string;
@@ -14,12 +14,13 @@ const Title: React.VFC<TitleProps> = ({fontSize = 32, ...titleProps}) => {
       style={{
         height: titleProps.height,
       }}>
-      <Text
-        style={{
+      <AppText
+        isBold={false}
+        originalStyle={{
           fontSize: fontSize,
         }}>
-        {I18n.t(titleProps.title)}
-      </Text>
+        {titleProps.title}
+      </AppText>
     </View>
   );
 };

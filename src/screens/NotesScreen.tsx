@@ -50,7 +50,7 @@ const NotesScreen: React.VFC = () => {
         />
         <Text
           style={{
-            fontWeight: 'bold',
+            fontFamily: 'JetBrainsMono-Bold',
             fontSize: 16,
           }}>
           {listRenderItemInfo.item.title}
