@@ -1,3 +1,6 @@
 {
-  "coc.preferences.formatOnSaveFiletypes": ["ts", "tsx"]
+  "coc.preferences.formatOnSaveFiletypes": ["css", "markdown"],
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.jsxSingleQuote": true
 }
