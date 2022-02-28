@@ -1,67 +1,174 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
-  FlatList,
   Image,
-  ListRenderItemInfo,
+  SectionList,
+  SectionListData,
   Text,
   TouchableOpacity,
   useWindowDimensions,
+  View,
 } from 'react-native';
+
+import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Title from '../components/Title';
 
 const sampleFolders = [
-  {name: 'sample1'},
-  {name: 'sample2'},
-  {name: 'sample3'},
-  {name: 'sample4'},
-  {name: 'sample5'},
-  {name: 'sample6'},
-  {name: 'sample7'},
-  {name: 'sample8'},
-  {name: 'sample9'},
-  {name: 'sample10'},
+  {name: 'sample1', noteCount: 200},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
+  {name: 'sample1', noteCount: 2},
 ];
 
-export interface RenderFolder {
-  name: string;
+interface FoldersScreenProps {
+  navigation: any;
 }
 
-const FoldersScreen: React.VFC = () => {
-  const renderFolders: React.FC<
-    ListRenderItemInfo<RenderFolder>
-  > = listRenderItemInfo => {
+interface Folder {
+  name: string;
+  noteCount: number;
+}
+
+interface RenderData {
+  name: string;
+  title: string;
+  data: Array<Folder>;
+}
+
+const datas: Array<RenderData> = [
+  {
+    name: 'stickyHeader',
+    title: 'folder',
+    data: [{name: '', noteCount: 0}],
+  },
+  {
+    name: 'folderList',
+    title: '',
+    data: sampleFolders,
+  },
+];
+
+const FoldersScreen: React.VFC<FoldersScreenProps> = ({navigation}) => {
+  const [headerTitle, setHeaderTitle] = useState('');
+  const {height, width} = useWindowDimensions();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: headerTitle,
+      headerRight: () => <EditButton />,
+    });
+  }, [navigation, headerTitle]);
+
+  const EditButton = () => {
     return (
-      <TouchableOpacity
-        style={{
-          width: width * 0.3,
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}>
-        <Image
-          source={require('../../assets/image/folder.png')}
-          style={{
-            width: 80,
-            height: 80,
-          }}
-        />
-        <Text>{listRenderItemInfo.item.name}</Text>
+      <TouchableOpacity>
+        <AppText isI18n={true}>edit</AppText>
       </TouchableOpacity>
     );
   };
 
-  const {height, width} = useWindowDimensions();
-  return (
-    <>
-      <Title title={'folder'} height={height * 0.1} />
+  const Item = ({item, index, section}: SectionListData<Folder, any>) => {
+    const isEnd = index === sampleFolders.length - 1;
+
+    return section.name === 'stickyHeader' ? (
       <Search height={height * 0.06} />
-      <FlatList
-        data={sampleFolders}
-        renderItem={renderFolders}
-        keyExtractor={item => item.name}
-        numColumns={3}
-      />
-    </>
+    ) : (
+      <TouchableOpacity
+        style={{
+          alignSelf: 'center',
+          width: width * 0.88,
+          height: height * 0.07,
+          alignItems: 'center',
+          flexDirection: 'row',
+          borderTopWidth: 2,
+          borderLeftWidth: 2,
+          borderRightWidth: 2,
+          borderBottomWidth: isEnd ? 2 : 0,
+          borderTopLeftRadius: index === 0 ? 5 : 0,
+          borderTopRightRadius: index === 0 ? 5 : 0,
+          borderBottomLeftRadius: isEnd ? 5 : 0,
+          borderBottomRightRadius: isEnd ? 5 : 0,
+        }}>
+        <Image
+          source={require('../../assets/image/folder.png')}
+          style={{
+            width: width * 0.1,
+            height: width * 0.1,
+            marginHorizontal: width * 0.01,
+          }}
+        />
+        <Text
+          style={{
+            width: width * 0.6,
+            marginLeft: 10,
+          }}>
+          {item.name}
+        </Text>
+        <Text style={{marginEnd: 10}}>{item.noteCount}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  return (
+    <View
+      style={{
+        alignSelf: 'center',
+        width: width * 0.88,
+      }}>
+      {
+        <SectionList
+          sections={datas}
+          keyExtractor={(item, index) => item + index.toString()}
+          renderItem={({item, index, section}) => (
+            <Item item={item} index={index} section={section} />
+          )}
+          renderSectionHeader={({section: {title}}) =>
+            title === '' ? (
+              <></>
+            ) : (
+              <Title title={title} height={height * 0.1} isI18n={true} />
+            )
+          }
+          stickySectionHeadersEnabled
+        />
+      }
+    </View>
   );
 };
 

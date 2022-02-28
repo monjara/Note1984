@@ -14,7 +14,7 @@ type AppTextProps = CustomTextProps & TextProps;
 
 const AppText: React.VFC<AppTextProps> = ({
   isBold = true,
-  isI18n = true,
+  isI18n = false,
   originalStyle = {},
   ...props
 }) => {

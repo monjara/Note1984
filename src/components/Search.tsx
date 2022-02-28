@@ -22,6 +22,7 @@ const Search: React.VFC<Props> = ({
         borderWidth: borderWidth,
         borderRadius: borderRadius,
         fontSize: fontSize,
+        marginBottom: 12,
       }}
       placeholder={I18n.t('search')}
     />
