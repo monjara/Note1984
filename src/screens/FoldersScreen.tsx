@@ -9,82 +9,45 @@ import {
   View,
 } from 'react-native';
 
+import { ScreenProps } from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Title from '../components/Title';
 
+const undefinedFolder = {id: 0, name: '', noteCount: 0};
+
 const sampleFolders = [
-  {name: 'sample1', noteCount: 200},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
-  {name: 'sample1', noteCount: 2},
+  {id: 1, name: 'sample1', noteCount: 123},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 3, name: 'sample1', noteCount: 2},
+  {id: 4, name: 'sample1', noteCount: 2},
+  {id: 5, name: 'sample1', noteCount: 2},
 ];
 
-interface FoldersScreenProps {
-  navigation: any;
-}
-
-interface Folder {
+type Folder = {
+  id: number;
   name: string;
   noteCount: number;
-}
+};
 
-interface RenderData {
-  name: string;
-  title: string;
+type RenderData = {
+  isHead: boolean;
   data: Array<Folder>;
-}
+};
 
 const datas: Array<RenderData> = [
   {
-    name: 'stickyHeader',
-    title: 'folder',
-    data: [{name: '', noteCount: 0}],
+    isHead: true,
+    data: [undefinedFolder],
   },
   {
-    name: 'folderList',
-    title: '',
+    isHead: false,
     data: sampleFolders,
   },
 ];
 
-const FoldersScreen: React.VFC<FoldersScreenProps> = ({navigation}) => {
+const FoldersScreen = ({navigation}: ScreenProps) => {
+  const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
   const {height, width} = useWindowDimensions();
 
@@ -94,6 +57,10 @@ const FoldersScreen: React.VFC<FoldersScreenProps> = ({navigation}) => {
       headerRight: () => <EditButton />,
     });
   }, [navigation, headerTitle]);
+
+  const handleFolder = (id: number) => {
+    navigation.navigate('Notes', {id: id});
+  };
 
   const EditButton = () => {
     return (
@@ -106,10 +73,11 @@ const FoldersScreen: React.VFC<FoldersScreenProps> = ({navigation}) => {
   const Item = ({item, index, section}: SectionListData<Folder, any>) => {
     const isEnd = index === sampleFolders.length - 1;
 
-    return section.name === 'stickyHeader' ? (
+    return section.isHead ? (
       <Search height={height * 0.06} />
     ) : (
       <TouchableOpacity
+        onPress={() => handleFolder(item.id)}
         style={{
           alignSelf: 'center',
           width: width * 0.88,
@@ -155,26 +123,26 @@ const FoldersScreen: React.VFC<FoldersScreenProps> = ({navigation}) => {
         <SectionList
           sections={datas}
           keyExtractor={(item, index) => item + index.toString()}
-          renderItem={({item, index, section}) => (
-            <Item item={item} index={index} section={section} />
-          )}
-          renderSectionHeader={({section: {title}}) =>
-            title === '' ? (
-              <></>
-            ) : (
-              <Title title={title} height={height * 0.1} isI18n={true} />
-            )
-          }
-          renderSectionFooter={({section: {title}}) => (
-            <View
-              style={{
-                height: title === '' ? 60 : 12,
-              }}
-            />
-          )}
           stickySectionHeadersEnabled
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
+          renderItem={({item, index, section}) => (
+            <Item item={item} index={index} section={section} />
+          )}
+          renderSectionHeader={({section: {isHead: isHead}}) =>
+            isHead ? (
+              <Title title={screenTitle} height={height * 0.1} isI18n={true} />
+            ) : (
+              <></>
+            )
+          }
+          renderSectionFooter={({section: {isHead: isHead}}) => (
+            <View
+              style={{
+                height: isHead ? 12 : 60,
+              }}
+            />
+          )}
         />
       }
     </View>
