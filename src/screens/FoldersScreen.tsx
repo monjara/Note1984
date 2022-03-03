@@ -165,7 +165,16 @@ const FoldersScreen: React.VFC<FoldersScreenProps> = ({navigation}) => {
               <Title title={title} height={height * 0.1} isI18n={true} />
             )
           }
+          renderSectionFooter={({section: {title}}) => (
+            <View
+              style={{
+                height: title === '' ? 60 : 12,
+              }}
+            />
+          )}
           stickySectionHeadersEnabled
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
         />
       }
     </View>
