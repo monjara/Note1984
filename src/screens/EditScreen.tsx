@@ -2,6 +2,6 @@ import React from 'react';
 import {Text} from 'react-native';
 
 const EditScreen = () => {
-  return <Text>'hehehehe'</Text>;
+  return <Text>'test'</Text>;
 };
 export default EditScreen;
