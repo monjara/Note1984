@@ -1,5 +1,5 @@
 import React from 'react';
-import {useColorScheme, View} from 'react-native';
+import {View} from 'react-native';
 import AppText from './custom/AppText';
 
 type TitleProps = {
