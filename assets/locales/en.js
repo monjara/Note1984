@@ -4,4 +4,5 @@ export default {
   note: 'note',
   search: 'search',
   edit: 'edit',
+  Done: '完了',
 };

@@ -4,4 +4,5 @@ export default {
   note: 'メモ',
   search: '検索',
   edit: '編集',
+  Done: '完了',
 };

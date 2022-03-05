@@ -13,28 +13,30 @@ import Title from '../components/Title';
 import {ScreenProps} from '../stacks/MainStack';
 
 const undefinedNote = {
-  id: 0,
+  id: undefined,
+  folder_id: undefined,
   title: '',
   text: '',
   created_at: undefined,
 };
 
 const sampleNotes = [
-  {id: 1, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 2, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 4, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 6, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 7, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 8, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 9, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 10, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 11, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 1, folder_id: 1, title: 'sample', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 2, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 3, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 4, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 5, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 6, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 7, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 8, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 9, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 10,folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {id: 11,folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
 ];
 
 export type Note = {
-  id: number;
+  id: number | undefined;
+  folder_id: number | undefined;
   title: string;
   text: string;
   created_at: string | undefined;
@@ -60,18 +62,18 @@ const NotesScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'notes';
 
   const handleNote = (item: Note) => {
-    navigation.navigate('Edit', {item: item});
+    navigation.navigate('Edit', {item});
   };
 
   const Item = ({item, index, section}: SectionListData<Note, any>) => {
-    const {id, title, text, created_at} = item;
+    const {id, folder_id, title, text, created_at} = item;
     const isEnd = index === sampleNotes.length - 1;
 
     return section.isHead ? (
       <Search height={height * 0.06} />
     ) : (
       <TouchableOpacity
-        onPress={() => handleNote({id, title, text, created_at})}
+        onPress={() => handleNote({id, folder_id, title, text, created_at})}
         style={{
           alignSelf: 'center',
           width: '100%',
