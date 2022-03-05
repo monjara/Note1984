@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import AppText from '../components/custom/AppText';
+import Footer from '../components/Footer';
 import Search from '../components/Search';
 import Title from '../components/Title';
 import {ScreenProps} from '../stacks/MainStack';
@@ -21,17 +22,83 @@ const undefinedNote = {
 };
 
 const sampleNotes = [
-  {id: 1, folder_id: 1, title: 'sample', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 2, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 3, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 4, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 5, folder_id: 3, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 6, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 7, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 8, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 9, folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 10,folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
-  {id: 11,folder_id: 5, title: 'asdf', text: 'asdfasdf', created_at: '2020/01/01 12:12:12'},
+  {
+    id: 1,
+    folder_id: 1,
+    title: 'sample',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 2,
+    folder_id: 3,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 3,
+    folder_id: 3,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 4,
+    folder_id: 3,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 5,
+    folder_id: 3,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 6,
+    folder_id: 5,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 7,
+    folder_id: 5,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 8,
+    folder_id: 5,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 9,
+    folder_id: 5,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 10,
+    folder_id: 5,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
+  {
+    id: 11,
+    folder_id: 5,
+    title: 'asdf',
+    text: 'asdfasdf',
+    created_at: '2020/01/01 12:12:12',
+  },
 ];
 
 export type Note = {
@@ -105,36 +172,46 @@ const NotesScreen = ({navigation}: ScreenProps) => {
 
   const {height, width} = useWindowDimensions();
   return (
-    <View
-      style={{
-        alignSelf: 'center',
-        width: width * 0.88,
-      }}>
-      <SectionList
-        sections={datas}
-        keyExtractor={(item, index) => item + index.toString()}
-        renderItem={({item, index, section}) => (
-          <Item item={item} index={index} section={section} />
-        )}
-        renderSectionHeader={({section: {isHead: isHead}}) =>
-          isHead ? (
-            <Title title={screenTitle} height={height * 0.1} isI18n={true} />
-          ) : (
-            <></>
-          )
-        }
-        renderSectionFooter={({section: {isHead: isHead}}) => (
-          <View
-            style={{
-              height: isHead ? 12 : 60,
-            }}
-          />
-        )}
-        stickySectionHeadersEnabled
-        showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}
-      />
-    </View>
+    <>
+      <View
+        style={{
+          alignSelf: 'center',
+          width: width * 0.88,
+        }}>
+        <SectionList
+          sections={datas}
+          keyExtractor={(item, index) => item + index.toString()}
+          renderItem={({item, index, section}) => (
+            <Item item={item} index={index} section={section} />
+          )}
+          renderSectionHeader={({section: {isHead: isHead}}) =>
+            isHead ? (
+              <Title title={screenTitle} height={height * 0.1} isI18n={true} />
+            ) : (
+              <></>
+            )
+          }
+          renderSectionFooter={({section: {isHead: isHead}}) => (
+            <View
+              style={{
+                height: isHead ? 12 : 60,
+              }}
+            />
+          )}
+          stickySectionHeadersEnabled
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+      <Footer>
+        <View
+          style={{
+            borderTopWidth: 2,
+            width: '100%',
+            height: '100%',
+          }}></View>
+      </Footer>
+    </>
   );
 };
 
