@@ -13,6 +13,7 @@ import {ScreenProps} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Title from '../components/Title';
+import Footer from '../components/Footer';
 
 const undefinedFolder = {id: 0, name: '', noteCount: 0};
 
@@ -119,38 +120,52 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   };
 
   return (
-    <View
-      style={{
-        alignSelf: 'center',
-        width: width * 0.88,
-      }}>
-      {
-        <SectionList
-          sections={datas}
-          keyExtractor={(item, index) => item + index.toString()}
-          stickySectionHeadersEnabled
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index, section}) => (
-            <Item item={item} index={index} section={section} />
-          )}
-          renderSectionHeader={({section: {isHead: isHead}}) =>
-            isHead ? (
-              <Title title={screenTitle} height={height * 0.1} isI18n={true} />
-            ) : (
-              <></>
-            )
-          }
-          renderSectionFooter={({section: {isHead: isHead}}) => (
-            <View
-              style={{
-                height: isHead ? 12 : 60,
-              }}
-            />
-          )}
-        />
-      }
-    </View>
+    <>
+      <View
+        style={{
+          alignSelf: 'center',
+          width: width * 0.88,
+        }}>
+        {
+          <SectionList
+            sections={datas}
+            keyExtractor={(item, index) => item + index.toString()}
+            stickySectionHeadersEnabled
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index, section}) => (
+              <Item item={item} index={index} section={section} />
+            )}
+            renderSectionHeader={({section: {isHead: isHead}}) =>
+              isHead ? (
+                <Title
+                  title={screenTitle}
+                  height={height * 0.1}
+                  isI18n={true}
+                />
+              ) : (
+                <></>
+              )
+            }
+            renderSectionFooter={({section: {isHead: isHead}}) => (
+              <View
+                style={{
+                  height: isHead ? 12 : 60,
+                }}
+              />
+            )}
+          />
+        }
+      </View>
+      <Footer>
+        <View
+          style={{
+            borderTopWidth: 2,
+            width: '100%',
+            height: '100%',
+          }}></View>
+      </Footer>
+    </>
   );
 };
 

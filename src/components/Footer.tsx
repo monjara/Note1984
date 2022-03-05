@@ -7,13 +7,14 @@ interface FooterProps {
 }
 
 const Footer = ({children}: FooterProps) => {
-  return <View style={styles.container}>{children}</View>;
+  const footerHeight = useHeaderHeight() - 10;
+  return (
+    <View style={[styles.container, {height: footerHeight}]}>{children}</View>
+  );
 };
 
-const headerHight = useHeaderHeight();
 const styles = StyleSheet.create({
   container: {
-    height: headerHight,
     position: 'absolute',
     left: 0,
     right: 0,
