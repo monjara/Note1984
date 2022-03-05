@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   Image,
   SectionList,
@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 
-import { ScreenProps } from '../stacks/MainStack';
+import {ScreenProps} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Title from '../components/Title';
@@ -24,7 +24,7 @@ const sampleFolders = [
   {id: 5, name: 'sample1', noteCount: 2},
 ];
 
-type Folder = {
+export type Folder = {
   id: number;
   name: string;
   noteCount: number;
@@ -49,7 +49,12 @@ const datas: Array<RenderData> = [
 const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
+  const [folder, setFolder] = useState<Array<Folder>>([undefinedFolder]);
   const {height, width} = useWindowDimensions();
+
+  useEffect(() => {
+    setFolder([...sampleFolders]);
+  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -71,7 +76,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   };
 
   const Item = ({item, index, section}: SectionListData<Folder, any>) => {
-    const isEnd = index === sampleFolders.length - 1;
+    const isEnd = index === folder.length - 1;
 
     return section.isHead ? (
       <Search height={height * 0.06} />
