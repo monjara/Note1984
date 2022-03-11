@@ -20,7 +20,11 @@ const AppText: React.VFC<AppTextProps> = ({
 }) => {
   return (
     <Text
-      style={[isBold ? styles.boldText : styles.regularText, originalStyle]}>
+      style={
+        isBold
+          ? [styles.boldText, originalStyle]
+          : [styles.regularText, originalStyle]
+      }>
       {isI18n ? I18n.t(props.children) : props.children}
     </Text>
   );

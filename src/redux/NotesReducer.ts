@@ -13,7 +13,6 @@ const notesSlice = createSlice({
   initialState: [] as Note[],
   reducers: {
     add: (state, action: PayloadAction<Note>) => {
-      //state.push(action.payload);
       return
     },
     edit: (state, action: PayloadAction<Note>) => {
