@@ -1,14 +1,12 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {TextInput, TouchableOpacity} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
 
 import AppText from '../components/custom/AppText';
 
 const EditScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const dispatch = useDispatch();
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -30,27 +28,6 @@ const EditScreen = () => {
   }, [route.params]);
 
   const handleSave = () => {
-    isEdit
-      ? dispatch({
-          type: 'UPDATE_NOTE',
-          payload: {
-            id: id,
-            folder_id: folderId,
-            title: title,
-            text: text,
-            created_at: 'todotodo',
-          },
-        })
-      : dispatch({
-          type: 'CREATE_NOTE',
-          payload: {
-            id: id,
-            folder_id: folderId,
-            title: title,
-            text: text,
-            created_at: 'todotodo',
-          },
-        });
   };
 
   const DoneButton = () => {

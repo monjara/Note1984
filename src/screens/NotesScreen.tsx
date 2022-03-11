@@ -11,6 +11,7 @@ import AppText from '../components/custom/AppText';
 import Footer from '../components/Footer';
 import Search from '../components/Search';
 import Title from '../components/Title';
+import {Note} from '../reducers/NotesReducer';
 import {ScreenProps} from '../stacks/MainStack';
 
 const undefinedNote = {
@@ -100,14 +101,6 @@ const sampleNotes = [
     created_at: '2020/01/01 12:12:12',
   },
 ];
-
-export type Note = {
-  id: number | undefined;
-  folder_id: number | undefined;
-  title: string;
-  text: string;
-  created_at: string | undefined;
-};
 
 type RenderData = {
   isHead: boolean;

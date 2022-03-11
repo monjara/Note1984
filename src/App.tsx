@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 
 import MainStack from './stacks/MainStack';
-import {store, persistor} from './store';
+import { store, persistor } from './redux/store';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';

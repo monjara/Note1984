@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import FoldersScreen from '../screens/FoldersScreen';
-import NotesScreen, {Note} from '../screens/NotesScreen';
+import NotesScreen from '../screens/NotesScreen';
 import EditScreen from '../screens/EditScreen';
 
 export interface ScreenProps {
@@ -12,7 +12,12 @@ export interface ScreenProps {
 type MainStackParamList = {
   Folders: {};
   Notes: {id: number};
-  Edit: {item: Note};
+  Edit: {
+    id: number;
+    title: string;
+    text: string;
+    created_at: string | undefined;
+  };
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
