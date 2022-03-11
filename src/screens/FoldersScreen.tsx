@@ -18,7 +18,6 @@ import Title from '../components/Title';
 import Footer from '../components/Footer';
 import {Folder} from '../redux/FoldersReducer';
 import FolderModal from '../components/FolderModal';
-import {useSelector} from 'react-redux';
 import {useAppSelector} from '../utils/hooks';
 
 const undefinedFolder = {id: 0, name: '', noteCount: 0};
@@ -64,7 +63,8 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const [showModal, setShowModal] = useState(true);
   const {height, width} = useWindowDimensions();
 
-  // const folders = useAppSelector(state => state.folders);
+  const folders = useAppSelector(state => state.folders);
+  console.log(JSON.stringify(folders))
 
   useEffect(() => {
     setFolder([...sampleFolders]);
