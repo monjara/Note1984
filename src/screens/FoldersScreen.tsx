@@ -1,9 +1,11 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   Image,
+  Modal,
   SectionList,
   SectionListData,
   Text,
+  TextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -14,22 +16,29 @@ import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Title from '../components/Title';
 import Footer from '../components/Footer';
+import {Folder} from '../redux/FoldersReducer';
+import FolderModal from '../components/FolderModal';
+import {useAppSelector} from '../utils/hooks';
 
 const undefinedFolder = {id: 0, name: '', noteCount: 0};
 
 const sampleFolders = [
   {id: 1, name: 'sample1', noteCount: 123},
   {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
+  {id: 2, name: 'sample1', noteCount: 2},
   {id: 3, name: 'sample1', noteCount: 2},
   {id: 4, name: 'sample1', noteCount: 2},
   {id: 5, name: 'sample1', noteCount: 2},
 ];
-
-export type Folder = {
-  id: number;
-  name: string;
-  noteCount: number;
-};
 
 type RenderData = {
   isHead: boolean;
@@ -51,7 +60,11 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
   const [folder, setFolder] = useState<Array<Folder>>([undefinedFolder]);
+  const [showModal, setShowModal] = useState(true);
   const {height, width} = useWindowDimensions();
+
+  const folders = useAppSelector(state => state.folders);
+  console.log(JSON.stringify(folders))
 
   useEffect(() => {
     setFolder([...sampleFolders]);
@@ -123,39 +136,46 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     <>
       <View
         style={{
-          alignSelf: 'center',
-          width: width * 0.88,
+          backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'white',
+          width: '100%',
         }}>
-        {
-          <SectionList
-            sections={datas}
-            keyExtractor={(item, index) => item + index.toString()}
-            stickySectionHeadersEnabled
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index, section}) => (
-              <Item item={item} index={index} section={section} />
-            )}
-            renderSectionHeader={({section: {isHead: isHead}}) =>
-              isHead ? (
-                <Title
-                  title={screenTitle}
-                  height={height * 0.1}
-                  isI18n={true}
+        <FolderModal showModal={showModal} />
+        <View
+          style={{
+            alignSelf: 'center',
+            width: width * 0.88,
+          }}>
+          {
+            <SectionList
+              sections={datas}
+              keyExtractor={(item, index) => item + index.toString()}
+              stickySectionHeadersEnabled
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({item, index, section}) => (
+                <Item item={item} index={index} section={section} />
+              )}
+              renderSectionHeader={({section: {isHead: isHead}}) =>
+                isHead ? (
+                  <Title
+                    title={screenTitle}
+                    height={height * 0.1}
+                    isI18n={true}
+                  />
+                ) : (
+                  <></>
+                )
+              }
+              renderSectionFooter={({section: {isHead: isHead}}) => (
+                <View
+                  style={{
+                    height: isHead ? 12 : 60,
+                  }}
                 />
-              ) : (
-                <></>
-              )
-            }
-            renderSectionFooter={({section: {isHead: isHead}}) => (
-              <View
-                style={{
-                  height: isHead ? 12 : 60,
-                }}
-              />
-            )}
-          />
-        }
+              )}
+            />
+          }
+        </View>
       </View>
       <Footer>
         <View
@@ -163,7 +183,33 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
             borderTopWidth: 2,
             width: '100%',
             height: '100%',
-          }}></View>
+            flexDirection: 'row',
+            justifyContent: 'center',
+          }}>
+          <View
+            style={{
+              width: '90%',
+              height: '100%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              style={{width: width * 0.08, height: width * 0.08}}>
+              <Image
+                source={require('../../assets/image/add_folder.png')}
+                style={{width: width * 0.08, height: width * 0.08}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{width: width * 0.08, height: width * 0.08}}>
+              <Image
+                source={require('../../assets/image/add_note.png')}
+                style={{width: width * 0.08, height: width * 0.08}}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
       </Footer>
     </>
   );
