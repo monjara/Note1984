@@ -11,7 +11,7 @@ type Props = {
 
 const Search: React.VFC<Props> = ({
   height,
-  fontSize = 10,
+  fontSize = 14,
   borderWidth = 2,
   borderRadius = 5,
 }) => {
@@ -22,6 +22,7 @@ const Search: React.VFC<Props> = ({
         borderWidth: borderWidth,
         borderRadius: borderRadius,
         fontSize: fontSize,
+        backgroundColor: 'white',
       }}
       placeholder={I18n.t('search')}
     />

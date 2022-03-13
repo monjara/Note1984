@@ -32,7 +32,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const [showModal, setShowModal] = useState(false);
   const {height, width} = useWindowDimensions();
 
-  const folders = useAppSelector(state => state);
+  const folders = useAppSelector(state => state.folders.list);
   console.log(JSON.stringify(folders));
 
   const datas: Array<RenderData> = [
@@ -42,14 +42,13 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     },
     {
       isHead: false,
-      // data: folders,
-      data: [],
+      data: folders,
     },
   ];
 
   useEffect(() => {
-    // setFolder([...folders]);
-  }, []);
+    setFolder([...folders]);
+  }, [folders]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -80,14 +79,12 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     return section.isHead ? (
       <Search height={height * 0.06} />
     ) : (
-      <TouchableOpacity
-        onPress={() => handleFolder(item.id)}
+      <View
         style={{
           alignSelf: 'center',
+          alignItems: 'center',
           width: width * 0.88,
           height: height * 0.07,
-          alignItems: 'center',
-          flexDirection: 'row',
           borderTopWidth: 2,
           borderLeftWidth: 2,
           borderRightWidth: 2,
@@ -97,107 +94,101 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
           borderBottomLeftRadius: isEnd ? 5 : 0,
           borderBottomRightRadius: isEnd ? 5 : 0,
         }}>
-        <Image
-          source={require('../../assets/image/folder.png')}
+        <TouchableOpacity
+          onPress={() => handleFolder(item.id)}
           style={{
-            width: width * 0.1,
-            height: width * 0.1,
-            marginHorizontal: width * 0.01,
-          }}
-        />
-        <Text
-          style={{
-            width: width * 0.6,
-            marginLeft: 10,
+            width: '100%',
+            height: '99%',
+            alignItems: 'center',
+            flexDirection: 'row',
+            backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
+            borderTopLeftRadius: index === 0 ? 5 : 0,
+            borderTopRightRadius: index === 0 ? 5 : 0,
+            borderBottomLeftRadius: isEnd ? 5 : 0,
+            borderBottomRightRadius: isEnd ? 5 : 0,
           }}>
-          {item.name}
-        </Text>
-        <Text style={{marginEnd: 10}}>{item.noteCount}</Text>
-      </TouchableOpacity>
+          <Image
+            source={require('../../assets/image/folder.png')}
+            style={{
+              width: width * 0.1,
+              height: width * 0.1,
+              marginHorizontal: width * 0.01,
+            }}
+          />
+          <Text
+            style={{
+              width: width * 0.6,
+              marginLeft: 10,
+            }}>
+            {item.name}
+          </Text>
+          <Text style={{marginEnd: 10}}>{item.noteCount}</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
   return (
-    <>
+    <View
+      style={{
+        height: '100%',
+        width: '100%',
+        backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'gainsboro',
+      }}>
+      <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
       <View
         style={{
-          backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'white',
-          width: '100%',
+          alignSelf: 'center',
+          width: width * 0.88,
         }}>
-        <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
-        <View
-          style={{
-            alignSelf: 'center',
-            width: width * 0.88,
-          }}>
-          {
-            <SectionList
-              sections={datas}
-              keyExtractor={(item, index) => item + index.toString()}
-              stickySectionHeadersEnabled
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              renderItem={({item, index, section}) => (
-                <Item item={item} index={index} section={section} />
-              )}
-              renderSectionHeader={({section: {isHead: isHead}}) =>
-                isHead ? (
-                  <Title
-                    title={screenTitle}
-                    height={height * 0.1}
-                    isI18n={true}
-                  />
-                ) : (
-                  <></>
-                )
-              }
-              renderSectionFooter={({section: {isHead: isHead}}) => (
-                <View
-                  style={{
-                    height: isHead ? 12 : 60,
-                  }}
+        {
+          <SectionList
+            sections={datas}
+            keyExtractor={(item, index) => item + index.toString()}
+            stickySectionHeadersEnabled
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item, index, section}) => (
+              <Item item={item} index={index} section={section} />
+            )}
+            renderSectionHeader={({section: {isHead: isHead}}) =>
+              isHead ? (
+                <Title
+                  title={screenTitle}
+                  height={height * 0.1}
+                  isI18n={true}
                 />
-              )}
-            />
-          }
-        </View>
+              ) : (
+                <></>
+              )
+            }
+            renderSectionFooter={({section: {isHead: isHead}}) => (
+              <View
+                style={{
+                  height: isHead ? 12 : 60,
+                }}
+              />
+            )}
+          />
+        }
       </View>
       <Footer>
-        <View
-          style={{
-            borderTopWidth: 2,
-            width: '100%',
-            height: '100%',
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}>
-          <View
-            style={{
-              width: '90%',
-              height: '100%',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              onPress={handleShowModal}
-              style={{width: width * 0.08, height: width * 0.08}}>
-              <Image
-                source={require('../../assets/image/add_folder.png')}
-                style={{width: width * 0.08, height: width * 0.08}}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{width: width * 0.08, height: width * 0.08}}>
-              <Image
-                source={require('../../assets/image/add_note.png')}
-                style={{width: width * 0.08, height: width * 0.08}}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <TouchableOpacity
+          onPress={handleShowModal}
+          style={{width: width * 0.08, height: width * 0.08}}>
+          <Image
+            source={require('../../assets/image/add_folder.png')}
+            style={{width: width * 0.08, height: width * 0.08}}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity style={{width: width * 0.08, height: width * 0.08}}>
+          <Image
+            source={require('../../assets/image/add_note.png')}
+            style={{width: width * 0.08, height: width * 0.08}}
+          />
+        </TouchableOpacity>
       </Footer>
-    </>
+    </View>
   );
 };
 
