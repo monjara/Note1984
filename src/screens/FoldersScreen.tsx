@@ -3,6 +3,7 @@ import {
   Image,
   SectionList,
   SectionListData,
+  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -30,10 +31,9 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const [headerTitle, setHeaderTitle] = useState('');
   const [folder, setFolder] = useState<Array<Folder>>([undefinedFolder]);
   const [showModal, setShowModal] = useState(false);
-  const {height, width} = useWindowDimensions();
+  const {height} = useWindowDimensions();
 
   const folders = useAppSelector(state => state.folders.list);
-  console.log(JSON.stringify(folders));
 
   const datas: Array<RenderData> = [
     {
@@ -75,54 +75,41 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
 
   const Item = ({item, index, section}: SectionListData<Folder, any>) => {
     const isEnd = index === folder.length - 1;
+    const topRadius = index === 0 ? 5 : 0;
+    const bottomRadius = isEnd ? 5 : 0;
+    const radius = {
+      borderTopLeftRadius: topRadius,
+      borderTopRightRadius: topRadius,
+      borderBottomLeftRadius: bottomRadius,
+      borderBottomRightRadius: bottomRadius,
+    };
 
     return section.isHead ? (
       <Search height={height * 0.06} />
     ) : (
       <View
-        style={{
-          alignSelf: 'center',
-          alignItems: 'center',
-          width: width * 0.88,
-          height: height * 0.07,
-          borderTopWidth: 2,
-          borderLeftWidth: 2,
-          borderRightWidth: 2,
-          borderBottomWidth: isEnd ? 2 : 0,
-          borderTopLeftRadius: index === 0 ? 5 : 0,
-          borderTopRightRadius: index === 0 ? 5 : 0,
-          borderBottomLeftRadius: isEnd ? 5 : 0,
-          borderBottomRightRadius: isEnd ? 5 : 0,
-        }}>
+        style={[
+          styles.sectionItemContainerWrapper,
+          {
+            borderBottomWidth: isEnd ? 2 : 0,
+            ...radius,
+          },
+        ]}>
         <TouchableOpacity
           onPress={() => handleFolder(item.id)}
-          style={{
-            width: '100%',
-            height: '99%',
-            alignItems: 'center',
-            flexDirection: 'row',
-            backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
-            borderTopLeftRadius: index === 0 ? 5 : 0,
-            borderTopRightRadius: index === 0 ? 5 : 0,
-            borderBottomLeftRadius: isEnd ? 5 : 0,
-            borderBottomRightRadius: isEnd ? 5 : 0,
-          }}>
+          style={[
+            styles.sectionItemContainer,
+            {
+              backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
+              ...radius,
+            },
+          ]}>
           <Image
             source={require('../../assets/image/folder.png')}
-            style={{
-              width: width * 0.1,
-              height: width * 0.1,
-              marginHorizontal: width * 0.01,
-            }}
+            style={styles.folderImage}
           />
-          <Text
-            style={{
-              width: width * 0.6,
-              marginLeft: 10,
-            }}>
-            {item.name}
-          </Text>
-          <Text style={{marginEnd: 10}}>{item.noteCount}</Text>
+          <Text style={styles.folderName}>{item.name}</Text>
+          <Text style={styles.noteCount}>{item.noteCount}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -130,66 +117,97 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
 
   return (
     <View
-      style={{
-        height: '100%',
-        width: '100%',
-        backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'gainsboro',
-      }}>
-      <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
-      <View
-        style={{
-          alignSelf: 'center',
-          width: width * 0.88,
-        }}>
+      style={[
+        styles.containerWrapper,
         {
-          <SectionList
-            sections={datas}
-            keyExtractor={(item, index) => item + index.toString()}
-            stickySectionHeadersEnabled
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item, index, section}) => (
-              <Item item={item} index={index} section={section} />
-            )}
-            renderSectionHeader={({section: {isHead: isHead}}) =>
-              isHead ? (
-                <Title
-                  title={screenTitle}
-                  height={height * 0.1}
-                  isI18n={true}
-                />
-              ) : (
-                <></>
-              )
-            }
-            renderSectionFooter={({section: {isHead: isHead}}) => (
-              <View
-                style={{
-                  height: isHead ? 12 : 60,
-                }}
-              />
-            )}
-          />
-        }
+          backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'gainsboro',
+        },
+      ]}>
+      <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
+      <View style={styles.container}>
+        <SectionList
+          sections={datas}
+          keyExtractor={(item, index) => item + index.toString()}
+          stickySectionHeadersEnabled
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({item, index, section}) => (
+            <Item item={item} index={index} section={section} />
+          )}
+          renderSectionHeader={({section: {isHead: isHead}}) =>
+            isHead ? (
+              <Title title={screenTitle} height={height * 0.1} isI18n={true} />
+            ) : (
+              <></>
+            )
+          }
+          renderSectionFooter={({section: {isHead: isHead}}) => (
+            <View
+              style={{
+                height: isHead ? 12 : 60,
+              }}
+            />
+          )}
+        />
       </View>
       <Footer>
-        <TouchableOpacity
-          onPress={handleShowModal}
-          style={{width: width * 0.08, height: width * 0.08}}>
+        <TouchableOpacity onPress={handleShowModal} style={styles.footerIcon}>
           <Image
             source={require('../../assets/image/add_folder.png')}
-            style={{width: width * 0.08, height: width * 0.08}}
+            style={styles.footerIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={{width: width * 0.08, height: width * 0.08}}>
+        <TouchableOpacity style={styles.footerIcon}>
           <Image
             source={require('../../assets/image/add_note.png')}
-            style={{width: width * 0.08, height: width * 0.08}}
+            style={styles.footerIcon}
           />
         </TouchableOpacity>
       </Footer>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  containerWrapper: {
+    height: '100%',
+    width: '100%',
+  },
+  container: {
+    alignSelf: 'center',
+    width: '88%',
+  },
+  sectionItemContainerWrapper: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 55,
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+  },
+  sectionItemContainer: {
+    width: '100%',
+    height: '99%',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  folderImage: {
+    width: 40,
+    height: 40,
+    marginHorizontal: 4,
+  },
+  folderName: {
+    width: 236,
+    marginLeft: 10,
+  },
+  noteCount: {
+    marginEnd: 10,
+  },
+  footerIcon: {
+    height: 32,
+    width: 32,
+  },
+});
 
 export default FoldersScreen;

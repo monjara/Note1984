@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  Image,
   SectionList,
   SectionListData,
+  StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
@@ -11,7 +13,7 @@ import AppText from '../components/custom/AppText';
 import Footer from '../components/Footer';
 import Search from '../components/Search';
 import Title from '../components/Title';
-import {Note} from '../reducers/NotesReducer';
+import {Note} from '../redux/NotesReducer';
 import {ScreenProps} from '../stacks/MainStack';
 
 const undefinedNote = {
@@ -120,6 +122,7 @@ const datas: Array<RenderData> = [
 
 const NotesScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'notes';
+  const {height, width} = useWindowDimensions();
 
   const handleNote = (item: Note) => {
     navigation.navigate('Edit', {item});
@@ -128,49 +131,44 @@ const NotesScreen = ({navigation}: ScreenProps) => {
   const Item = ({item, index, section}: SectionListData<Note, any>) => {
     const {id, folder_id, title, text, created_at} = item;
     const isEnd = index === sampleNotes.length - 1;
+    const topRadius = index === 0 ? 5 : 0;
+    const bottomRadius = isEnd ? 5 : 0;
+    const radius = {
+      borderTopLeftRadius: topRadius,
+      borderTopRightRadius: topRadius,
+      borderBottomLeftRadius: bottomRadius,
+      borderBottomRightRadius: bottomRadius,
+    };
 
     return section.isHead ? (
       <Search height={height * 0.06} />
     ) : (
-      <TouchableOpacity
-        onPress={() => handleNote({id, folder_id, title, text, created_at})}
-        style={{
-          alignSelf: 'center',
-          width: '100%',
-          height: height * 0.09,
-          alignItems: 'center',
-          flexDirection: 'row',
-          borderTopWidth: 2,
-          borderLeftWidth: 2,
-          borderRightWidth: 2,
-          borderBottomWidth: isEnd ? 2 : 0,
-          borderTopLeftRadius: index === 0 ? 5 : 0,
-          borderTopRightRadius: index === 0 ? 5 : 0,
-          borderBottomLeftRadius: isEnd ? 5 : 0,
-          borderBottomRightRadius: isEnd ? 5 : 0,
-        }}>
-        <View
-          style={{
-            marginLeft: 10,
-          }}>
-          <AppText originalStyle={{fontSize: 20}}>{title}</AppText>
-          <View style={{flexDirection: 'row'}}>
-            <Text>{created_at}</Text>
-            <Text>{text} </Text>
+      <View
+        style={[
+          styles.sectionItemContainerWrapper,
+          {
+            borderBottomWidth: isEnd ? 2 : 0,
+            ...radius,
+          },
+        ]}>
+        <TouchableOpacity
+          onPress={() => handleNote({id, folder_id, title, text, created_at})}
+          style={[styles.sectionItemContainer, {...radius}]}>
+          <View style={styles.sectionItemDetailArea}>
+            <AppText originalStyle={styles.sectionItemTitle}>{title}</AppText>
+            <View style={styles.sectionItemDescriptionArea}>
+              <Text>{created_at}</Text>
+              <Text>{text} </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     );
   };
 
-  const {height, width} = useWindowDimensions();
   return (
-    <>
-      <View
-        style={{
-          alignSelf: 'center',
-          width: width * 0.88,
-        }}>
+    <View style={styles.containerWrapper}>
+      <View style={styles.container}>
         <SectionList
           sections={datas}
           keyExtractor={(item, index) => item + index.toString()}
@@ -196,16 +194,53 @@ const NotesScreen = ({navigation}: ScreenProps) => {
           showsHorizontalScrollIndicator={false}
         />
       </View>
-      <Footer>
-        <View
-          style={{
-            borderTopWidth: 2,
-            width: '100%',
-            height: '100%',
-          }}></View>
+      <Footer justifyContent={'flex-end'}>
+        <TouchableOpacity style={{width: width * 0.08, height: width * 0.08}}>
+          <Image
+            source={require('../../assets/image/add_note.png')}
+            style={{width: width * 0.08, height: width * 0.08}}
+          />
+        </TouchableOpacity>
       </Footer>
-    </>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  containerWrapper: {
+    height: '100%',
+    backgroundColor: 'gainsboro',
+  },
+  container: {
+    alignSelf: 'center',
+    width: '88%',
+  },
+  sectionItemContainerWrapper: {
+    width: '100%',
+    height: 70,
+    backgroundColor: 'white',
+    alignSelf: 'center',
+    alignItems: 'center',
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+  },
+  sectionItemContainer: {
+    alignSelf: 'center',
+    width: '100%',
+    height: 70,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  sectionItemDetailArea: {
+    marginLeft: 10,
+  },
+  sectionItemTitle: {
+    fontSize: 20,
+  },
+  sectionItemDescriptionArea: {
+    flexDirection: 'row',
+  },
+});
 
 export default NotesScreen;
