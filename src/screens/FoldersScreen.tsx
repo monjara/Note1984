@@ -1,11 +1,9 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   Image,
-  Modal,
   SectionList,
   SectionListData,
   Text,
-  TextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -22,52 +20,35 @@ import {useAppSelector} from '../utils/hooks';
 
 const undefinedFolder = {id: 0, name: '', noteCount: 0};
 
-const sampleFolders = [
-  {id: 1, name: 'sample1', noteCount: 123},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 2, name: 'sample1', noteCount: 2},
-  {id: 3, name: 'sample1', noteCount: 2},
-  {id: 4, name: 'sample1', noteCount: 2},
-  {id: 5, name: 'sample1', noteCount: 2},
-];
-
 type RenderData = {
   isHead: boolean;
   data: Array<Folder>;
 };
 
-const datas: Array<RenderData> = [
-  {
-    isHead: true,
-    data: [undefinedFolder],
-  },
-  {
-    isHead: false,
-    data: sampleFolders,
-  },
-];
-
 const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
   const [folder, setFolder] = useState<Array<Folder>>([undefinedFolder]);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const {height, width} = useWindowDimensions();
 
-  const folders = useAppSelector(state => state.folders);
-  console.log(JSON.stringify(folders))
+  const folders = useAppSelector(state => state);
+  console.log(JSON.stringify(folders));
+
+  const datas: Array<RenderData> = [
+    {
+      isHead: true,
+      data: [undefinedFolder],
+    },
+    {
+      isHead: false,
+      // data: folders,
+      data: [],
+    },
+  ];
 
   useEffect(() => {
-    setFolder([...sampleFolders]);
+    // setFolder([...folders]);
   }, []);
 
   useLayoutEffect(() => {
@@ -76,6 +57,10 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
       headerRight: () => <EditButton />,
     });
   }, [navigation, headerTitle]);
+
+  const handleShowModal = () => {
+    setShowModal(!showModal);
+  };
 
   const handleFolder = (id: number) => {
     navigation.navigate('Notes', {id: id});
@@ -139,7 +124,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
           backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'white',
           width: '100%',
         }}>
-        <FolderModal showModal={showModal} />
+        <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
         <View
           style={{
             alignSelf: 'center',
@@ -195,6 +180,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
               alignItems: 'center',
             }}>
             <TouchableOpacity
+              onPress={handleShowModal}
               style={{width: width * 0.08, height: width * 0.08}}>
               <Image
                 source={require('../../assets/image/add_folder.png')}
