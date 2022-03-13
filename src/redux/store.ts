@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {configureStore} from '@reduxjs/toolkit';
+import {combineReducers} from 'redux';
 import {
   persistReducer,
   persistStore,
@@ -10,8 +9,16 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
+import {configureStore} from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import rootReducer from './rootReducer';
+import FoldersReducer from './FoldersReducer';
+import NotesReducer from './NotesReducer';
+
+const rootReducer = combineReducers({
+  folders: FoldersReducer,
+  notes: NotesReducer,
+});
 
 const persistConfig = {
   key: 'root',
@@ -31,6 +38,5 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
-
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

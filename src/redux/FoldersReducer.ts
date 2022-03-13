@@ -14,13 +14,17 @@ const foldersSlice = createSlice({
   name: 'notes',
   initialState: initialState,
   reducers: {
-    add: (state, action: PayloadAction<Folder>) => {
+    add_folder: (state, action: PayloadAction<Folder>) => {
       state.list.push(action.payload);
     },
-    edit: (state, action: PayloadAction<Folder>) => {},
-    remove: (state, action: PayloadAction<Folder>) => {},
+    edit_folder: (state, action: PayloadAction<Folder>) => {},
+    remove_folder: (state, action: PayloadAction<Folder>) => {
+      state.list.filter(l => {
+        action.payload.id !== l.id;
+      });
+    },
   },
 });
 
-export const {add, edit, remove} = foldersSlice.actions;
+export const {add_folder, edit_folder, remove_folder} = foldersSlice.actions;
 export default foldersSlice.reducer;

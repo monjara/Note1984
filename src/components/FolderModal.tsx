@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, VoidFunctionComponent} from 'react';
 import {
   Modal,
   StyleSheet,
@@ -7,27 +7,37 @@ import {
   View,
 } from 'react-native';
 import I18n from '../../assets/locales/i18n';
-import {add} from '../redux/FoldersReducer';
 import {useAppDispatch} from '../utils/hooks';
+import {add_folder} from '../redux/FoldersReducer';
 
 import AppText from './custom/AppText';
 
+type VoidFunction = () => void;
+
 type FolderModalProps = {
   showModal: boolean;
+  handleShowModal: VoidFunction;
 };
 
-const FolderModal = ({showModal}: FolderModalProps) => {
+const FolderModal = ({showModal, handleShowModal}: FolderModalProps) => {
   const dispatch = useAppDispatch();
   const [folderName, setFolderName] = useState('');
 
+  const closeModal = () => {
+    if (showModal) {
+      handleShowModal();
+    }
+  };
+
   const handleSaveFolder = () => {
     dispatch(
-      add({
+      add_folder({
         id: 123,
         name: folderName,
         noteCount: 0,
       }),
     );
+    closeModal();
   };
 
   return (
@@ -45,7 +55,7 @@ const FolderModal = ({showModal}: FolderModalProps) => {
           />
         </View>
         <View style={styles.modalLowerhalf}>
-          <TouchableOpacity style={styles.buttonWrapper}>
+          <TouchableOpacity onPress={closeModal} style={styles.buttonWrapper}>
             <View style={[styles.button, {borderRightWidth: 1}]}>
               <AppText isI18n={true}>{'cancel'}</AppText>
             </View>
