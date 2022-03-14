@@ -22,9 +22,15 @@ type MainStackParamList = {
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
-const MainStack: React.VFC = () => {
+const MainStack = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: 'gainsboro',
+        },
+        headerShadowVisible: false,
+      }}>
       <Stack.Screen name="Folders" component={FoldersScreen} />
       <Stack.Screen name="Notes" component={NotesScreen} />
       <Stack.Screen name="Edit" component={EditScreen} />
