@@ -1,16 +1,18 @@
 import React from 'react';
 import {
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
+
 import AppText from '../components/custom/AppText';
 import Footer from '../components/Footer';
-import ScrollContainer from '../components/ScrollContainer';
 import Search from '../components/Search';
+import Title from '../components/Title';
 import {Note} from '../redux/NotesReducer';
 import {ScreenProps} from '../stacks/MainStack';
 
@@ -145,10 +147,17 @@ const NotesScreen = ({navigation}: ScreenProps) => {
 
   return (
     <View style={styles.containerWrapper}>
-      <ScrollContainer screenTitle={screenTitle}>
+      <ScrollView
+        stickyHeaderIndices={[0, 2]}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}>
+        <Title title={screenTitle} height={54} isI18n={true} />
         <Search height={height * 0.06} />
+        <View style={styles.smallBlank} />
         <NoteList notes={sampleNotes} />
-      </ScrollContainer>
+        <View style={styles.largeBlank} />
+      </ScrollView>
       <Footer justifyContent={'flex-end'}>
         <TouchableOpacity style={styles.footerIcon}>
           <Image
@@ -195,6 +204,12 @@ const styles = StyleSheet.create({
   },
   sectionItemDescriptionArea: {
     flexDirection: 'row',
+  },
+  smallBlank: {
+    height: 20,
+  },
+  largeBlank: {
+    height: 60,
   },
   footerIcon: {
     height: 32,

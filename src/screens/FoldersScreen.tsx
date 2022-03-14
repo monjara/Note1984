@@ -1,6 +1,7 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -15,7 +16,7 @@ import Footer from '../components/Footer';
 import {Folder} from '../redux/FoldersReducer';
 import FolderModal from '../components/FolderModal';
 import {useAppSelector} from '../utils/hooks';
-import ScrollContainer from '../components/ScrollContainer';
+import Title from '../components/Title';
 
 const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
@@ -24,6 +25,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const {height} = useWindowDimensions();
 
   const folders = useAppSelector<Folder[]>(state => state.folders.list);
+  console.log(folders);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -94,10 +96,17 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
         },
       ]}>
       <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
-      <ScrollContainer screenTitle={screenTitle}>
+      <ScrollView
+        stickyHeaderIndices={[0, 2]}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}>
+        <Title title={screenTitle} height={54} isI18n={true} />
         <Search height={height * 0.06} />
+        <View style={styles.smallBlank} />
         <FolderList folders={folders} />
-      </ScrollContainer>
+        <View style={styles.largeBlank} />
+      </ScrollView>
       <Footer>
         <TouchableOpacity onPress={handleShowModal} style={styles.footerIcon}>
           <Image
@@ -151,6 +160,12 @@ const styles = StyleSheet.create({
   },
   noteCount: {
     marginEnd: 10,
+  },
+  smallBlank: {
+    height: 20,
+  },
+  largeBlank: {
+    height: 60,
   },
   footerIcon: {
     height: 32,
