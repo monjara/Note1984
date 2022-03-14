@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   Image,
-  SectionList,
-  SectionListData,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,18 +9,10 @@ import {
 } from 'react-native';
 import AppText from '../components/custom/AppText';
 import Footer from '../components/Footer';
+import ScrollContainer from '../components/ScrollContainer';
 import Search from '../components/Search';
-import Title from '../components/Title';
 import {Note} from '../redux/NotesReducer';
 import {ScreenProps} from '../stacks/MainStack';
-
-const undefinedNote = {
-  id: undefined,
-  folder_id: undefined,
-  title: '',
-  text: '',
-  created_at: undefined,
-};
 
 const sampleNotes = [
   {
@@ -104,101 +94,66 @@ const sampleNotes = [
   },
 ];
 
-type RenderData = {
-  isHead: boolean;
-  data: Array<Note>;
-};
-
-const datas: Array<RenderData> = [
-  {
-    isHead: true,
-    data: [undefinedNote],
-  },
-  {
-    isHead: false,
-    data: sampleNotes,
-  },
-];
-
 const NotesScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'notes';
-  const {height, width} = useWindowDimensions();
+  const {height} = useWindowDimensions();
 
   const handleNote = (item: Note) => {
     navigation.navigate('Edit', {item});
   };
 
-  const Item = ({item, index, section}: SectionListData<Note, any>) => {
-    const {id, folder_id, title, text, created_at} = item;
-    const isEnd = index === sampleNotes.length - 1;
-    const topRadius = index === 0 ? 5 : 0;
-    const bottomRadius = isEnd ? 5 : 0;
-    const radius = {
-      borderTopLeftRadius: topRadius,
-      borderTopRightRadius: topRadius,
-      borderBottomLeftRadius: bottomRadius,
-      borderBottomRightRadius: bottomRadius,
-    };
+  type NoteListProps = {
+    notes: Note[];
+  };
 
-    return section.isHead ? (
-      <Search height={height * 0.06} />
-    ) : (
-      <View
-        style={[
-          styles.sectionItemContainerWrapper,
-          {
-            borderBottomWidth: isEnd ? 2 : 0,
-            ...radius,
-          },
-        ]}>
-        <TouchableOpacity
-          onPress={() => handleNote({id, folder_id, title, text, created_at})}
-          style={[styles.sectionItemContainer, {...radius}]}>
-          <View style={styles.sectionItemDetailArea}>
-            <AppText originalStyle={styles.sectionItemTitle}>{title}</AppText>
-            <View style={styles.sectionItemDescriptionArea}>
-              <Text>{created_at}</Text>
-              <Text>{text} </Text>
-            </View>
+  const NoteList = ({notes}: NoteListProps) => {
+    return (
+      <>
+        {notes.map((note, index) => (
+          <View
+            key={index.toString()}
+            style={[
+              styles.sectionItemContainerWrapper,
+              {
+                borderTopLeftRadius: index === 0 ? 5 : 0,
+                borderTopRightRadius: index === 0 ? 5 : 0,
+                borderBottomLeftRadius:
+                  index === sampleNotes.length - 1 ? 5 : 0,
+                borderBottomRightRadius:
+                  index === sampleNotes.length - 1 ? 5 : 0,
+                borderBottomWidth: index === sampleNotes.length - 1 ? 2 : 0,
+              },
+            ]}>
+            <TouchableOpacity
+              onPress={() => handleNote({...note})}
+              style={styles.sectionItemContainer}>
+              <View style={styles.sectionItemDetailArea}>
+                <AppText originalStyle={styles.sectionItemTitle}>
+                  {note.title}
+                </AppText>
+                <View style={styles.sectionItemDescriptionArea}>
+                  <Text>{note.created_at}</Text>
+                  <Text>{note.text} </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-      </View>
+        ))}
+      </>
     );
   };
 
   return (
     <View style={styles.containerWrapper}>
-      <View style={styles.container}>
-        <SectionList
-          sections={datas}
-          keyExtractor={(item, index) => item + index.toString()}
-          renderItem={({item, index, section}) => (
-            <Item item={item} index={index} section={section} />
-          )}
-          renderSectionHeader={({section: {isHead: isHead}}) =>
-            isHead ? (
-              <Title title={screenTitle} height={height * 0.1} isI18n={true} />
-            ) : (
-              <></>
-            )
-          }
-          renderSectionFooter={({section: {isHead: isHead}}) => (
-            <View
-              style={{
-                height: isHead ? 12 : 60,
-              }}
-            />
-          )}
-          stickySectionHeadersEnabled
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
+      <ScrollContainer screenTitle={screenTitle}>
+        <Search height={height * 0.06} />
+        <NoteList notes={sampleNotes} />
+      </ScrollContainer>
       <Footer justifyContent={'flex-end'}>
-        <TouchableOpacity style={{width: width * 0.08, height: width * 0.08}}>
+        <TouchableOpacity style={styles.footerIcon}>
           <Image
             source={require('../../assets/image/add_note.png')}
-            style={{width: width * 0.08, height: width * 0.08}}
+            style={styles.footerIcon}
           />
         </TouchableOpacity>
       </Footer>
@@ -240,6 +195,10 @@ const styles = StyleSheet.create({
   },
   sectionItemDescriptionArea: {
     flexDirection: 'row',
+  },
+  footerIcon: {
+    height: 32,
+    width: 32,
   },
 });
 

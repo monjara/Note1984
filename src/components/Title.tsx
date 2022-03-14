@@ -18,6 +18,7 @@ const Title: React.VFC<TitleProps> = ({
     <View
       style={{
         height: titleProps.height,
+        backgroundColor: 'gainsboro',
       }}>
       <AppText
         isBold={false}
