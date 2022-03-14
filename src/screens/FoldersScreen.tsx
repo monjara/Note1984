@@ -1,8 +1,6 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   Image,
-  SectionList,
-  SectionListData,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,42 +11,19 @@ import {
 import {ScreenProps} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
-import Title from '../components/Title';
 import Footer from '../components/Footer';
 import {Folder} from '../redux/FoldersReducer';
 import FolderModal from '../components/FolderModal';
 import {useAppSelector} from '../utils/hooks';
-
-const undefinedFolder = {id: 0, name: '', noteCount: 0};
-
-type RenderData = {
-  isHead: boolean;
-  data: Array<Folder>;
-};
+import ScrollContainer from '../components/ScrollContainer';
 
 const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
-  const [folder, setFolder] = useState<Array<Folder>>([undefinedFolder]);
   const [showModal, setShowModal] = useState(false);
   const {height} = useWindowDimensions();
 
-  const folders = useAppSelector(state => state.folders.list);
-
-  const datas: Array<RenderData> = [
-    {
-      isHead: true,
-      data: [undefinedFolder],
-    },
-    {
-      isHead: false,
-      data: folders,
-    },
-  ];
-
-  useEffect(() => {
-    setFolder([...folders]);
-  }, [folders]);
+  const folders = useAppSelector<Folder[]>(state => state.folders.list);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -73,45 +48,40 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     );
   };
 
-  const Item = ({item, index, section}: SectionListData<Folder, any>) => {
-    const isEnd = index === folder.length - 1;
-    const topRadius = index === 0 ? 5 : 0;
-    const bottomRadius = isEnd ? 5 : 0;
-    const radius = {
-      borderTopLeftRadius: topRadius,
-      borderTopRightRadius: topRadius,
-      borderBottomLeftRadius: bottomRadius,
-      borderBottomRightRadius: bottomRadius,
-    };
+  type FolderListProps = {
+    folders: Folder[];
+  };
 
-    return section.isHead ? (
-      <Search height={height * 0.06} />
-    ) : (
-      <View
-        style={[
-          styles.sectionItemContainerWrapper,
-          {
-            borderBottomWidth: isEnd ? 2 : 0,
-            ...radius,
-          },
-        ]}>
-        <TouchableOpacity
-          onPress={() => handleFolder(item.id)}
-          style={[
-            styles.sectionItemContainer,
-            {
-              backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
-              ...radius,
-            },
-          ]}>
-          <Image
-            source={require('../../assets/image/folder.png')}
-            style={styles.folderImage}
-          />
-          <Text style={styles.folderName}>{item.name}</Text>
-          <Text style={styles.noteCount}>{item.noteCount}</Text>
-        </TouchableOpacity>
-      </View>
+  const FolderList = ({folders}: FolderListProps) => {
+    return (
+      <>
+        {folders.map((folder, index) => (
+          <View
+            key={index.toString()}
+            style={[
+              styles.sectionItemContainerWrapper,
+              {
+                backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
+                borderTopLeftRadius: index === 0 ? 5 : 0,
+                borderTopRightRadius: index === 0 ? 5 : 0,
+                borderBottomLeftRadius: index === folders.length - 1 ? 5 : 0,
+                borderBottomRightRadius: index === folders.length - 1 ? 5 : 0,
+                borderBottomWidth: index === folders.length - 1 ? 2 : 0,
+              },
+            ]}>
+            <TouchableOpacity
+              onPress={() => handleFolder(folder.id)}
+              style={[styles.sectionItemContainer]}>
+              <Image
+                source={require('../../assets/image/folder.png')}
+                style={styles.folderImage}
+              />
+              <Text style={styles.folderName}>{folder.name}</Text>
+              <Text style={styles.noteCount}>{folder.noteCount}</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </>
     );
   };
 
@@ -124,32 +94,10 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
         },
       ]}>
       <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
-      <View style={styles.container}>
-        <SectionList
-          sections={datas}
-          keyExtractor={(item, index) => item + index.toString()}
-          stickySectionHeadersEnabled
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item, index, section}) => (
-            <Item item={item} index={index} section={section} />
-          )}
-          renderSectionHeader={({section: {isHead: isHead}}) =>
-            isHead ? (
-              <Title title={screenTitle} height={height * 0.1} isI18n={true} />
-            ) : (
-              <></>
-            )
-          }
-          renderSectionFooter={({section: {isHead: isHead}}) => (
-            <View
-              style={{
-                height: isHead ? 12 : 60,
-              }}
-            />
-          )}
-        />
-      </View>
+      <ScrollContainer screenTitle={screenTitle}>
+        <Search height={height * 0.06} />
+        <FolderList folders={folders} />
+      </ScrollContainer>
       <Footer>
         <TouchableOpacity onPress={handleShowModal} style={styles.footerIcon}>
           <Image
@@ -188,7 +136,7 @@ const styles = StyleSheet.create({
   },
   sectionItemContainer: {
     width: '100%',
-    height: '99%',
+    height: '100%',
     alignItems: 'center',
     flexDirection: 'row',
   },
