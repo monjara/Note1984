@@ -33,9 +33,6 @@ const notesSlice = createSlice({
         state.filter((_, index) => index !== action.payload.id);
       }
     },
-    removeAllNote: (state = initialState, action = null) => {
-      state = initialState;
-    },
   },
 });
 

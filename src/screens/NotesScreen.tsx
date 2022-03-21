@@ -97,8 +97,7 @@ const NotesScreen = ({navigation, route}: ScreenProps) => {
         <View style={styles.largeBlank} />
       </ScrollView>
       <Footer justifyContent={'flex-end'}>
-        <TouchableOpacity
-          style={styles.footerIcon}>
+        <TouchableOpacity style={styles.footerIcon}>
           <Text>clear</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerIcon}>
