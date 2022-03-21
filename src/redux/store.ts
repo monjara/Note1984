@@ -14,10 +14,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import FoldersReducer from './FoldersReducer';
 import NotesReducer from './NotesReducer';
+import InitialReducer from './InitialReducer';
 
 const rootReducer = combineReducers({
   folders: FoldersReducer,
   notes: NotesReducer,
+  initial: InitialReducer,
 });
 
 const persistConfig = {

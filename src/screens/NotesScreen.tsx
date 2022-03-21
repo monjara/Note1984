@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -15,93 +15,32 @@ import Search from '../components/Search';
 import Title from '../components/Title';
 import {Note} from '../redux/NotesReducer';
 import {ScreenProps} from '../stacks/MainStack';
+import {useAppSelector} from '../utils/hooks';
+import {useAppDispatch} from '../utils/hooks';
 
-const sampleNotes = [
-  {
-    id: 1,
-    folder_id: 1,
-    title: 'sample',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 2,
-    folder_id: 3,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 3,
-    folder_id: 3,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 4,
-    folder_id: 3,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 5,
-    folder_id: 3,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 6,
-    folder_id: 5,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 7,
-    folder_id: 5,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 8,
-    folder_id: 5,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 9,
-    folder_id: 5,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 10,
-    folder_id: 5,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-  {
-    id: 11,
-    folder_id: 5,
-    title: 'asdf',
-    text: 'asdfasdf',
-    created_at: '2020/01/01 12:12:12',
-  },
-];
-
-const NotesScreen = ({navigation}: ScreenProps) => {
-  const screenTitle = 'notes';
+const NotesScreen = ({navigation, route}: ScreenProps) => {
   const {height} = useWindowDimensions();
+  const [headerTitle, setHeaderTitle] = useState('');
+  const dispatch = useAppDispatch();
 
-  const handleNote = (item: Note) => {
-    navigation.navigate('Edit', {item});
+  const notes = useAppSelector(state => state.notes);
+  console.log('notes: ', notes);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: headerTitle,
+      // headerRight: () => <EditButton />,
+    });
+  }, [navigation, headerTitle]);
+
+  const handleNote = (note: Note) => {
+    navigation.navigate('Edit', {
+      id: note.id,
+      folderId: note.folderId,
+      title: note.title,
+      text: note.text,
+      created_at: note.created_at,
+    });
   };
 
   type NoteListProps = {
@@ -116,14 +55,13 @@ const NotesScreen = ({navigation}: ScreenProps) => {
             key={index.toString()}
             style={[
               styles.sectionItemContainerWrapper,
+              // eslint-disable-next-line react-native/no-inline-styles
               {
                 borderTopLeftRadius: index === 0 ? 5 : 0,
                 borderTopRightRadius: index === 0 ? 5 : 0,
-                borderBottomLeftRadius:
-                  index === sampleNotes.length - 1 ? 5 : 0,
-                borderBottomRightRadius:
-                  index === sampleNotes.length - 1 ? 5 : 0,
-                borderBottomWidth: index === sampleNotes.length - 1 ? 2 : 0,
+                borderBottomLeftRadius: index === notes.length - 1 ? 5 : 0,
+                borderBottomRightRadius: index === notes.length - 1 ? 5 : 0,
+                borderBottomWidth: index === notes.length - 1 ? 2 : 0,
               },
             ]}>
             <TouchableOpacity
@@ -152,13 +90,17 @@ const NotesScreen = ({navigation}: ScreenProps) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={styles.container}>
-        <Title title={screenTitle} height={54} isI18n={true} />
+        <Title title={route.params.folderName} height={54} isI18n={false} />
         <Search height={height * 0.06} />
         <View style={styles.smallBlank} />
-        <NoteList notes={sampleNotes} />
+        <NoteList notes={notes} />
         <View style={styles.largeBlank} />
       </ScrollView>
       <Footer justifyContent={'flex-end'}>
+        <TouchableOpacity
+          style={styles.footerIcon}>
+          <Text>clear</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.footerIcon}>
           <Image
             source={require('../../assets/image/add_note.png')}

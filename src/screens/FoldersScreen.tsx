@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   Image,
   ScrollView,
@@ -13,19 +13,26 @@ import {ScreenProps} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Footer from '../components/Footer';
-import {Folder} from '../redux/FoldersReducer';
-import FolderModal from '../components/FolderModal';
-import {useAppSelector} from '../utils/hooks';
+import {addFolder, Folder} from '../redux/FoldersReducer';
+import FolderCreateModal from '../components/FolderCreateModal';
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
 import Title from '../components/Title';
+import {initialize} from '../redux/InitialReducer';
+
+const initialFolder = {id: 1, name: 'notes', noteCount: 0};
+
+type FolderListProps = {
+  folders: Folder[];
+};
 
 const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
   const [showModal, setShowModal] = useState(false);
   const {height} = useWindowDimensions();
-
-  const folders = useAppSelector<Folder[]>(state => state.folders.list);
-  console.log(folders);
+  const dispatch = useAppDispatch();
+  const folders = useAppSelector(state => state.folders);
+  const initFlg = useAppSelector(state => state.initial.initFlg);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -34,12 +41,29 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     });
   }, [navigation, headerTitle]);
 
+  useEffect(() => {
+    if (initFlg) {
+      dispatch(addFolder(initialFolder));
+      dispatch(initialize(false));
+    }
+  }, [initFlg]);
+
   const handleShowModal = () => {
     setShowModal(!showModal);
   };
 
-  const handleFolder = (id: number) => {
-    navigation.navigate('Notes', {id: id});
+  const handleEditNote = () => {
+    navigation.navigate('Edit', {
+      id: 1,
+      folder_id: 1,
+      title: '',
+      text: '',
+      created_at: '',
+    });
+  };
+
+  const handleFolder = (id: number, folderName: string) => {
+    navigation.navigate('Notes', {id: id, folderName: folderName});
   };
 
   const EditButton = () => {
@@ -50,10 +74,6 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     );
   };
 
-  type FolderListProps = {
-    folders: Folder[];
-  };
-
   const FolderList = ({folders}: FolderListProps) => {
     return (
       <>
@@ -62,6 +82,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
             key={index.toString()}
             style={[
               styles.sectionItemContainerWrapper,
+              // eslint-disable-next-line react-native/no-inline-styles
               {
                 backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
                 borderTopLeftRadius: index === 0 ? 5 : 0,
@@ -72,7 +93,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
               },
             ]}>
             <TouchableOpacity
-              onPress={() => handleFolder(folder.id)}
+              onPress={() => handleFolder(folder.id, folder.name)}
               style={[styles.sectionItemContainer]}>
               <Image
                 source={require('../../assets/image/folder.png')}
@@ -91,17 +112,29 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     <View
       style={[
         styles.containerWrapper,
+        // eslint-disable-next-line react-native/no-inline-styles
         {
           backgroundColor: showModal ? 'rgba(0,0,0,0.3)' : 'gainsboro',
         },
       ]}>
-      <FolderModal showModal={showModal} handleShowModal={handleShowModal} />
+      <FolderCreateModal
+        showModal={showModal}
+        handleShowModal={handleShowModal}
+      />
       <ScrollView
         stickyHeaderIndices={[0, 2]}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={styles.container}>
-        <Title title={screenTitle} height={54} isI18n={true} />
+        <Title
+          title={screenTitle}
+          height={54}
+          isI18n={true}
+          // eslint-disable-next-line react-native/no-inline-styles
+          style={{
+            backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'gainsboro',
+          }}
+        />
         <Search height={height * 0.06} />
         <View style={styles.smallBlank} />
         <FolderList folders={folders} />
@@ -114,7 +147,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
             style={styles.footerIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerIcon}>
+        <TouchableOpacity style={styles.footerIcon} onPress={handleEditNote}>
           <Image
             source={require('../../assets/image/add_note.png')}
             style={styles.footerIcon}

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import I18n from '../../assets/locales/i18n';
 import {useAppDispatch} from '../utils/hooks';
-import {add_folder} from '../redux/FoldersReducer';
+import {addFolder} from '../redux/FoldersReducer';
 
 import AppText from './custom/AppText';
 
@@ -19,7 +19,7 @@ type FolderModalProps = {
   handleShowModal: VoidFunction;
 };
 
-const FolderModal = ({showModal, handleShowModal}: FolderModalProps) => {
+const FolderCreateModal = ({showModal, handleShowModal}: FolderModalProps) => {
   const dispatch = useAppDispatch();
   const [folderName, setFolderName] = useState('');
 
@@ -31,7 +31,7 @@ const FolderModal = ({showModal, handleShowModal}: FolderModalProps) => {
 
   const handleSaveFolder = () => {
     dispatch(
-      add_folder({
+      addFolder({
         id: 123,
         name: folderName,
         noteCount: 0,
@@ -125,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FolderModal;
+export default FolderCreateModal;

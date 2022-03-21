@@ -7,6 +7,7 @@ type TitleProps = {
   height: number;
   fontSize?: number;
   isI18n?: boolean;
+  style?: any;
 };
 
 const Title: React.VFC<TitleProps> = ({
@@ -16,10 +17,12 @@ const Title: React.VFC<TitleProps> = ({
 }) => {
   return (
     <View
-      style={{
-        height: titleProps.height,
-        backgroundColor: 'gainsboro',
-      }}>
+      style={[
+        {
+          height: titleProps.height,
+        },
+        titleProps.style,
+      ]}>
       <AppText
         isBold={false}
         isI18n={isI18n}

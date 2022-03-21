@@ -1,66 +1,90 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {TextInput, TouchableOpacity} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
+import {useAppDispatch} from '../utils/hooks';
 import AppText from '../components/custom/AppText';
+import {addNote, Note} from '../redux/NotesReducer';
+import {StackParamList} from '../stacks/MainStack';
+
+type EditScreenRouteProp = RouteProp<StackParamList, 'Edit'>;
 
 const EditScreen = () => {
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
-  const route = useRoute();
+  const route = useRoute<EditScreenRouteProp>();
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
 
-  const {id, folderId, isEdit} =
-    route.params !== undefined && route.params.item;
+  // const {id} = route.params !== undefined && route.params.id;
+
+  const DoneButton = React.memo(() => {
+    return (
+      <TouchableOpacity onPress={() => handleSaveNote()}>
+        <AppText isI18n={true}>Done</AppText>
+      </TouchableOpacity>
+    );
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => <DoneButton />,
     });
-  }, [navigation]);
+  }, [navigation, title, text, DoneButton]);
 
   useEffect(() => {
     if (route.params !== undefined) {
-      setTitle(route.params.item.title);
-      setText(route.params.item.text);
+      setTitle(route.params.title);
+      setText(route.params.text);
     }
   }, [route.params]);
 
-  const handleSave = () => {
-  };
-
-  const DoneButton = () => {
-    return (
-      <TouchableOpacity onPress={handleSave}>
-        <AppText isI18n={true}>Done</AppText>
-      </TouchableOpacity>
-    );
-  };
+  const handleSaveNote = useCallback(() => {
+    if (title !== undefined && text !== undefined) {
+      dispatch(
+        addNote({
+          id: 1234,
+          folderId: 1234,
+          title: title,
+          text: text,
+          created_at: '',
+        }),
+      );
+    }
+  }, [dispatch, text, title]);
 
   return (
     <>
       <TextInput
+        multiline={true}
         value={title}
         placeholder={'title'}
         placeholderTextColor={'silver'}
-        onChangeText={title => setTitle(title)}
-        style={{
-          fontSize: 26,
-          fontFamily: 'JetBrainsMono-Bold',
-        }}
+        onChangeText={txt => setTitle(txt)}
+        style={style.titleArea}
       />
       <TextInput
+        multiline={true}
         value={text}
         placeholder={'text'}
         placeholderTextColor={'silver'}
-        onChangeText={text => setText(text)}
-        style={{
-          fontSize: 16,
-          fontFamily: 'JetBrainsMono-Regular',
-        }}
+        onChangeText={txt => setText(txt)}
+        style={style.textArea}
       />
     </>
   );
 };
+
+const style = StyleSheet.create({
+  titleArea: {
+    fontSize: 26,
+    fontFamily: 'JetBrainsMono-Bold',
+  },
+  textArea: {
+    fontSize: 16,
+    fontFamily: 'JetBrainsMono-Regular',
+  },
+});
+
 export default EditScreen;

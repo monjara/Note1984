@@ -7,20 +7,22 @@ import EditScreen from '../screens/EditScreen';
 
 export interface ScreenProps {
   navigation: any;
+  route: any;
 }
 
-type MainStackParamList = {
+export type StackParamList = {
   Folders: {};
   Notes: {id: number};
   Edit: {
     id: number;
+    folderId: number;
     title: string;
     text: string;
     created_at: string | undefined;
   };
 };
 
-const Stack = createNativeStackNavigator<MainStackParamList>();
+const Stack = createNativeStackNavigator<StackParamList>();
 
 const MainStack = () => {
   return (

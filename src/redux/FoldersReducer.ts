@@ -6,25 +6,23 @@ export type Folder = {
   noteCount: number;
 };
 
-const initialState = {
-  list: [],
-};
+const initialState: Folder[] = [{id: 1, name: 'notes', noteCount: 0}];
 
 const foldersSlice = createSlice({
   name: 'notes',
-  initialState: initialState,
+  initialState: [] as Folder[],
   reducers: {
-    add_folder: (state, action: PayloadAction<Folder>) => {
-      state.list.push(action.payload);
+    addFolder: (state = initialState, action: PayloadAction<Folder>) => {
+      state.push(action.payload);
     },
-    edit_folder: (state, action: PayloadAction<Folder>) => {},
-    remove_folder: (state, action: PayloadAction<Folder>) => {
-      state.list.filter(l => {
+    editFolder: (state, action: PayloadAction<Folder>) => {},
+    removeFolder: (state, action: PayloadAction<Folder>) => {
+      state.filter(l => {
         action.payload.id !== l.id;
       });
     },
   },
 });
 
-export const {add_folder, edit_folder, remove_folder} = foldersSlice.actions;
+export const {addFolder, editFolder, removeFolder} = foldersSlice.actions;
 export default foldersSlice.reducer;
