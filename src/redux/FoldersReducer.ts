@@ -1,12 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type Folder = {
-  id: number;
+  id: string;
   name: string;
   noteCount: number;
 };
 
-const initialState: Folder[] = [{id: 1, name: 'notes', noteCount: 0}];
+const initialState: Folder[] = [{id: '1', name: 'notes', noteCount: 0}];
 
 const foldersSlice = createSlice({
   name: 'notes',

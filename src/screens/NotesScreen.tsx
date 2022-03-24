@@ -8,23 +8,36 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {useRoute} from '@react-navigation/native';
+import uuid from 'react-native-uuid';
 
 import AppText from '../components/custom/AppText';
 import Footer from '../components/Footer';
 import Search from '../components/Search';
 import Title from '../components/Title';
 import {Note} from '../redux/NotesReducer';
-import {ScreenProps} from '../stacks/MainStack';
+import {
+  EditScreenParamList,
+  NotesScreenRouteProp,
+  ScreenProps,
+} from '../stacks/MainStack';
 import {useAppSelector} from '../utils/hooks';
-import {useAppDispatch} from '../utils/hooks';
 
-const NotesScreen = ({navigation, route}: ScreenProps) => {
+type NoteListProps = {
+  notes: Note[];
+};
+
+const NotesScreen = ({navigation}: ScreenProps) => {
   const {height} = useWindowDimensions();
   const [headerTitle, setHeaderTitle] = useState('');
-  const dispatch = useAppDispatch();
 
-  const notes = useAppSelector(state => state.notes);
-  console.log('notes: ', notes);
+  const route = useRoute<NotesScreenRouteProp>();
+  const folderId = route.params.folderId;
+  const folderName = route.params.folderName;
+
+  const notes = useAppSelector(state =>
+    state.notes.filter(note => note.folderId === folderId),
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,18 +46,27 @@ const NotesScreen = ({navigation, route}: ScreenProps) => {
     });
   }, [navigation, headerTitle]);
 
-  const handleNote = (note: Note) => {
-    navigation.navigate('Edit', {
-      id: note.id,
-      folderId: note.folderId,
-      title: note.title,
-      text: note.text,
-      created_at: note.created_at,
-    });
-  };
+  const navigateToEdit = (isEdit: boolean, note?: Note) => {
+    const props: EditScreenParamList =
+      isEdit && note !== undefined
+        ? {
+            noteId: note.noteId,
+            folderId: note.folderId,
+            title: note.title,
+            text: note.text,
+            created_at: note.createdAt,
+            isEdit,
+          }
+        : {
+            noteId: uuid.v4().toString(),
+            folderId,
+            title: '',
+            text: '',
+            created_at: '',
+            isEdit,
+          };
 
-  type NoteListProps = {
-    notes: Note[];
+    navigation.navigate('Edit', {...props});
   };
 
   const NoteList = ({notes}: NoteListProps) => {
@@ -65,14 +87,14 @@ const NotesScreen = ({navigation, route}: ScreenProps) => {
               },
             ]}>
             <TouchableOpacity
-              onPress={() => handleNote({...note})}
+              onPress={() => navigateToEdit(true, {...note})}
               style={styles.sectionItemContainer}>
               <View style={styles.sectionItemDetailArea}>
                 <AppText originalStyle={styles.sectionItemTitle}>
                   {note.title}
                 </AppText>
                 <View style={styles.sectionItemDescriptionArea}>
-                  <Text>{note.created_at}</Text>
+                  <Text>{note.createdAt}</Text>
                   <Text>{note.text} </Text>
                 </View>
               </View>
@@ -90,17 +112,16 @@ const NotesScreen = ({navigation, route}: ScreenProps) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={styles.container}>
-        <Title title={route.params.folderName} height={54} isI18n={false} />
+        <Title title={folderName} height={54} isI18n={false} />
         <Search height={height * 0.06} />
         <View style={styles.smallBlank} />
         <NoteList notes={notes} />
         <View style={styles.largeBlank} />
       </ScrollView>
       <Footer justifyContent={'flex-end'}>
-        <TouchableOpacity style={styles.footerIcon}>
-          <Text>clear</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerIcon}>
+        <TouchableOpacity
+          onPress={() => navigateToEdit(false)}
+          style={styles.footerIcon}>
           <Image
             source={require('../../assets/image/add_note.png')}
             style={styles.footerIcon}

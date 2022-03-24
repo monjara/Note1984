@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type Note = {
-  id: number | undefined;
-  folderId: number | undefined;
+  noteId: string;
+  folderId: string;
   title: string;
   text: string;
-  created_at: string | undefined;
+  createdAt: string | undefined;
 };
 
 const initialState: Note[] = [];
@@ -17,25 +17,22 @@ const notesSlice = createSlice({
     addNote: (state = initialState, action: PayloadAction<Note>) => {
       state.push(action.payload);
     },
-    editNote: (state, action: PayloadAction<Note>) => {
-      if (action.payload.id !== undefined) {
-        state[action.payload.id] = {
-          id: action.payload.id,
-          folderId: action.payload.folderId,
-          title: action.payload.title,
-          text: action.payload.text,
-          created_at: action.payload.created_at,
-        };
+    editNote: (state = initialState, action: PayloadAction<Note>) => {
+      if (action.payload.noteId !== undefined) {
+        state.map(note =>
+          note.noteId === action.payload.noteId
+            ? console.log('aaaa')
+            : console.log('bbbb'),
+        );
       }
     },
     removeNote: (state, action: PayloadAction<Note>) => {
-      if (action.payload.id !== undefined) {
-        state.filter((_, index) => index !== action.payload.id);
+      if (action.payload.noteId !== undefined) {
+        state.filter(note => note.noteId !== action.payload.noteId);
       }
     },
   },
 });
 
-export const {addNote, editNote, removeNote, removeAllNote} =
-  notesSlice.actions;
+export const {addNote, editNote, removeNote} = notesSlice.actions;
 export default notesSlice.reducer;

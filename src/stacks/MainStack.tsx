@@ -1,5 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
 
 import FoldersScreen from '../screens/FoldersScreen';
 import NotesScreen from '../screens/NotesScreen';
@@ -10,17 +11,28 @@ export interface ScreenProps {
   route: any;
 }
 
+export type NotesScreenParamList = {
+  folderId: string;
+  folderName: string;
+};
+
+export type EditScreenParamList = {
+  noteId: string;
+  folderId: string;
+  title: string;
+  text: string;
+  created_at: string | undefined;
+  isEdit: boolean;
+};
+
 export type StackParamList = {
   Folders: {};
-  Notes: {id: number};
-  Edit: {
-    id: number;
-    folderId: number;
-    title: string;
-    text: string;
-    created_at: string | undefined;
-  };
+  Notes: NotesScreenParamList;
+  Edit: EditScreenParamList;
 };
+
+export type NotesScreenRouteProp = RouteProp<StackParamList, 'Notes'>;
+export type EditScreenRouteProp = RouteProp<StackParamList, 'Edit'>;
 
 const Stack = createNativeStackNavigator<StackParamList>();
 

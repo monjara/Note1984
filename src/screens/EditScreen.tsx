@@ -1,23 +1,23 @@
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {useAppDispatch} from '../utils/hooks';
+import {addNote, editNote, Note} from '../redux/NotesReducer';
+import {EditScreenRouteProp} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
-import {addNote, Note} from '../redux/NotesReducer';
-import {StackParamList} from '../stacks/MainStack';
-
-type EditScreenRouteProp = RouteProp<StackParamList, 'Edit'>;
 
 const EditScreen = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
-  const route = useRoute<EditScreenRouteProp>();
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
 
-  // const {id} = route.params !== undefined && route.params.id;
+  const route = useRoute<EditScreenRouteProp>();
+  const noteId = route.params.noteId;
+  const folderId = route.params.folderId;
+  const isEdit = route.params.isEdit;
 
   const DoneButton = React.memo(() => {
     return (
@@ -42,15 +42,17 @@ const EditScreen = () => {
 
   const handleSaveNote = useCallback(() => {
     if (title !== undefined && text !== undefined) {
-      dispatch(
-        addNote({
-          id: 1234,
-          folderId: 1234,
-          title: title,
-          text: text,
-          created_at: '',
-        }),
-      );
+      const noteData: Note = {
+        noteId,
+        folderId,
+        title,
+        text,
+        createdAt: '',
+      };
+
+      isEdit
+        ? dispatch(editNote({...noteData}))
+        : dispatch(addNote({...noteData}));
     }
   }, [dispatch, text, title]);
 

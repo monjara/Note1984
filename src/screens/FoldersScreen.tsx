@@ -8,8 +8,9 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import uuid from 'react-native-uuid';
 
-import {ScreenProps} from '../stacks/MainStack';
+import {EditScreenParamList, ScreenProps} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Footer from '../components/Footer';
@@ -19,7 +20,7 @@ import {useAppDispatch, useAppSelector} from '../utils/hooks';
 import Title from '../components/Title';
 import {initialize} from '../redux/InitialReducer';
 
-const initialFolder = {id: 1, name: 'notes', noteCount: 0};
+const initialFolder = {id: '1', name: 'notes', noteCount: 0};
 
 type FolderListProps = {
   folders: Folder[];
@@ -52,18 +53,26 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     setShowModal(!showModal);
   };
 
-  const handleEditNote = () => {
-    navigation.navigate('Edit', {
-      id: 1,
-      folder_id: 1,
-      title: '',
-      text: '',
-      created_at: '',
+  const navigateToNotes = (folderId: string, folderName: string) => {
+    navigation.navigate('Notes', {
+      folderId,
+      folderName,
     });
   };
 
-  const handleFolder = (id: number, folderName: string) => {
-    navigation.navigate('Notes', {id: id, folderName: folderName});
+  const navigateToEdit = () => {
+    const noteId = uuid.v4().toString();
+
+    const props: EditScreenParamList = {
+      noteId,
+      folderId: '1',
+      title: '',
+      text: '',
+      created_at: '',
+      isEdit: false,
+    };
+
+    navigation.navigate('Edit', {...props});
   };
 
   const EditButton = () => {
@@ -93,7 +102,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
               },
             ]}>
             <TouchableOpacity
-              onPress={() => handleFolder(folder.id, folder.name)}
+              onPress={() => navigateToNotes(folder.id, folder.name)}
               style={[styles.sectionItemContainer]}>
               <Image
                 source={require('../../assets/image/folder.png')}
@@ -147,7 +156,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
             style={styles.footerIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerIcon} onPress={handleEditNote}>
+        <TouchableOpacity style={styles.footerIcon} onPress={navigateToEdit}>
           <Image
             source={require('../../assets/image/add_note.png')}
             style={styles.footerIcon}

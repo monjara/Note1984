@@ -1,4 +1,4 @@
-import React, {useState, VoidFunctionComponent} from 'react';
+import React, {useState} from 'react';
 import {
   Modal,
   StyleSheet,
@@ -8,8 +8,9 @@ import {
 } from 'react-native';
 import I18n from '../../assets/locales/i18n';
 import {useAppDispatch} from '../utils/hooks';
-import {addFolder} from '../redux/FoldersReducer';
+import uuid from 'react-native-uuid';
 
+import {addFolder} from '../redux/FoldersReducer';
 import AppText from './custom/AppText';
 
 type VoidFunction = () => void;
@@ -30,9 +31,10 @@ const FolderCreateModal = ({showModal, handleShowModal}: FolderModalProps) => {
   };
 
   const handleSaveFolder = () => {
+    const id = uuid.v4().toString();
     dispatch(
       addFolder({
-        id: 123,
+        id: id,
         name: folderName,
         noteCount: 0,
       }),
