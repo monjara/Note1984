@@ -45,7 +45,7 @@ const MainStack = () => {
         },
         headerShadowVisible: false,
         headerBackTitleVisible: false,
-        headerBackImageSource: require('../../assets/image/backButton-30.png'),
+        headerBackVisible:false,
       }}>
       <Stack.Screen name="Folders" component={FoldersScreen} />
       <Stack.Screen name="Notes" component={NotesScreen} />
