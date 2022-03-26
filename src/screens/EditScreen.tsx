@@ -6,6 +6,7 @@ import {useAppDispatch} from '../utils/hooks';
 import {addNote, editNote, Note} from '../redux/NotesReducer';
 import {EditScreenRouteProp} from '../stacks/MainStack';
 import AppText from '../components/custom/AppText';
+import {addNotesCount} from '../redux/FoldersReducer';
 
 const EditScreen = () => {
   const dispatch = useAppDispatch();
@@ -47,12 +48,14 @@ const EditScreen = () => {
         folderId,
         title,
         text,
-        createdAt: '',
       };
 
-      isEdit
-        ? dispatch(editNote({...noteData}))
-        : dispatch(addNote({...noteData}));
+      if (isEdit) {
+        dispatch(editNote({...noteData}));
+      } else {
+        dispatch(addNote({...noteData}));
+        dispatch(addNotesCount({folderId}));
+      }
     }
   }, [dispatch, text, title]);
 

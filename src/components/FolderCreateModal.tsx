@@ -10,19 +10,28 @@ import I18n from '../../assets/locales/i18n';
 import {useAppDispatch} from '../utils/hooks';
 import uuid from 'react-native-uuid';
 
-import {addFolder} from '../redux/FoldersReducer';
+import {addFolder, editFolder} from '../redux/FoldersReducer';
 import AppText from './custom/AppText';
 
 type VoidFunction = () => void;
 
 type FolderModalProps = {
+  isCreate: boolean;
   showModal: boolean;
   handleShowModal: VoidFunction;
+  updateFolderName: string;
+  updateFolderId: string;
 };
 
-const FolderCreateModal = ({showModal, handleShowModal}: FolderModalProps) => {
+const FolderCreateModal = ({
+  isCreate,
+  showModal,
+  handleShowModal,
+  updateFolderName,
+  updateFolderId,
+}: FolderModalProps) => {
   const dispatch = useAppDispatch();
-  const [folderName, setFolderName] = useState('');
+  const [folderName, setFolderName] = useState(isCreate ? '' : updateFolderName);
 
   const closeModal = () => {
     if (showModal) {
@@ -31,14 +40,23 @@ const FolderCreateModal = ({showModal, handleShowModal}: FolderModalProps) => {
   };
 
   const handleSaveFolder = () => {
-    const id = uuid.v4().toString();
-    dispatch(
-      addFolder({
-        id: id,
-        name: folderName,
-        noteCount: 0,
-      }),
-    );
+    if (isCreate) {
+      const id = uuid.v4().toString();
+      dispatch(
+        addFolder({
+          folderId: id,
+          name: folderName,
+          noteCount: 0,
+        }),
+      );
+    } else {
+      dispatch(
+        editFolder({
+          folderId: updateFolderId,
+          name: folderName,
+        }),
+      );
+    }
     closeModal();
   };
 
@@ -46,12 +64,20 @@ const FolderCreateModal = ({showModal, handleShowModal}: FolderModalProps) => {
     <Modal visible={showModal} transparent={true} style={[styles.background]}>
       <View style={styles.modalWrapper}>
         <View style={styles.modalUpperhalf}>
-          <AppText isBold={true} isI18n={true} originalStyle={styles.text}>
-            {'new_folder'}
-          </AppText>
+          {isCreate ? (
+            <AppText isBold={true} isI18n={true} originalStyle={styles.text}>
+              {'new_folder'}
+            </AppText>
+          ) : (
+            <AppText isBold={true} isI18n={true} originalStyle={styles.text}>
+              {'update_folder'}
+            </AppText>
+          )}
           <AppText isI18n={true}>{'input_folder_name'}</AppText>
           <TextInput
+            autoFocus={true}
             placeholder={' ' + I18n.t('name')}
+            defaultValue={folderName}
             style={styles.input}
             onChangeText={text => setFolderName(text)}
           />

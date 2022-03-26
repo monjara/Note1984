@@ -54,7 +54,6 @@ const NotesScreen = ({navigation}: ScreenProps) => {
             folderId: note.folderId,
             title: note.title,
             text: note.text,
-            created_at: note.createdAt,
             isEdit,
           }
         : {
@@ -94,7 +93,6 @@ const NotesScreen = ({navigation}: ScreenProps) => {
                   {note.title}
                 </AppText>
                 <View style={styles.sectionItemDescriptionArea}>
-                  <Text>{note.createdAt}</Text>
                   <Text>{note.text} </Text>
                 </View>
               </View>
