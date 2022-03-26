@@ -11,7 +11,6 @@ import {
 import {useRoute} from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 
-import AppText from '../components/custom/AppText';
 import Footer from '../components/Footer';
 import Search from '../components/Search';
 import Title from '../components/Title';
@@ -94,9 +93,9 @@ const NotesScreen = ({navigation}: ScreenProps) => {
                   </Text>
                 </View>
                 <View style={styles.sectionItemDescriptionArea}>
-                  <Text numberOfLines={1}
-                  style={styles.sectionItemDescription}
-                  >{note.text} </Text>
+                  <Text numberOfLines={1} style={styles.sectionItemDescription}>
+                    {note.text}{' '}
+                  </Text>
                 </View>
               </View>
             </TouchableOpacity>

@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 import uuid from 'react-native-uuid';
 
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
+import {initialize} from '../redux/InitialReducer';
+import {addFolder, Folder} from '../redux/FoldersReducer';
 import {EditScreenParamList, ScreenProps} from '../stacks/MainStack';
+import I18n from '../../assets/locales/i18n';
 import Search from '../components/Search';
 import Footer from '../components/Footer';
-import {addFolder, Folder} from '../redux/FoldersReducer';
-import FolderCreateModal from '../components/FolderCreateModal';
-import {useAppDispatch, useAppSelector} from '../utils/hooks';
 import Title from '../components/Title';
-import {initialize} from '../redux/InitialReducer';
+import FolderCreateModal from '../components/FolderCreateModal';
 
 const initialFolder = {folderId: '1', name: 'notes', noteCount: 0};
 
@@ -119,7 +120,9 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
                   source={require('../../assets/image/folder.png')}
                   style={styles.folderImage}
                 />
-                <Text style={styles.folderName}>{folder.name}</Text>
+                <Text style={styles.folderName}>
+                  {folder.folderId === '1' ? I18n.t(folder.name) : folder.name}
+                </Text>
                 <Text style={styles.noteCount}>{folder.noteCount}</Text>
               </TouchableOpacity>
             </View>
