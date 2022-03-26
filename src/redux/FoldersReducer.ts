@@ -1,12 +1,16 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
 export type Folder = {
-  id: string;
+  folderId: string;
   name: string;
   noteCount: number;
 };
 
-const initialState: Folder[] = [{id: '1', name: 'notes', noteCount: 0}];
+type HandleNotesCountType = {
+  folderId: string;
+};
+
+const initialState: Folder[] = [{folderId: '1', name: 'notes', noteCount: 0}];
 
 const foldersSlice = createSlice({
   name: 'notes',
@@ -15,14 +19,43 @@ const foldersSlice = createSlice({
     addFolder: (state = initialState, action: PayloadAction<Folder>) => {
       state.push(action.payload);
     },
-    editFolder: (state, action: PayloadAction<Folder>) => {},
+    editFolder: (state, action: PayloadAction<Omit<Folder, 'noteCount'>>) => {
+      const folder = state.find(
+        folder => folder.folderId === action.payload.folderId,
+      );
+      if (folder) {
+        folder.name = action.payload.name;
+      }
+    },
     removeFolder: (state, action: PayloadAction<Folder>) => {
-      state.filter(l => {
-        action.payload.id !== l.id;
+      state.filter(folder => {
+        folder.folderId !== action.payload.folderId;
       });
+    },
+    addNotesCount: (state, action: PayloadAction<HandleNotesCountType>) => {
+      const folder = state.find(
+        folder => folder.folderId === action.payload.folderId,
+      );
+      if (folder) {
+        folder.noteCount += 1;
+      }
+    },
+    reduceNotesCount: (state, action: PayloadAction<HandleNotesCountType>) => {
+      const folder = state.find(
+        folder => folder.folderId === action.payload.folderId,
+      );
+      if (folder) {
+        folder.noteCount -= 1;
+      }
     },
   },
 });
 
-export const {addFolder, editFolder, removeFolder} = foldersSlice.actions;
+export const {
+  addFolder,
+  editFolder,
+  removeFolder,
+  addNotesCount,
+  reduceNotesCount,
+} = foldersSlice.actions;
 export default foldersSlice.reducer;

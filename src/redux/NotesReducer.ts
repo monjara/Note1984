@@ -5,7 +5,6 @@ export type Note = {
   folderId: string;
   title: string;
   text: string;
-  createdAt: string | undefined;
 };
 
 const initialState: Note[] = [];
@@ -22,7 +21,6 @@ const notesSlice = createSlice({
       if (note) {
         note.title = action.payload.title;
         note.text = action.payload.text;
-        note.createdAt = action.payload.createdAt;
       }
     },
     removeNote: (state, action: PayloadAction<Note>) => {

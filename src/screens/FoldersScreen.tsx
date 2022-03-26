@@ -11,7 +11,6 @@ import {
 import uuid from 'react-native-uuid';
 
 import {EditScreenParamList, ScreenProps} from '../stacks/MainStack';
-import AppText from '../components/custom/AppText';
 import Search from '../components/Search';
 import Footer from '../components/Footer';
 import {addFolder, Folder} from '../redux/FoldersReducer';
@@ -20,7 +19,7 @@ import {useAppDispatch, useAppSelector} from '../utils/hooks';
 import Title from '../components/Title';
 import {initialize} from '../redux/InitialReducer';
 
-const initialFolder = {id: '1', name: 'notes', noteCount: 0};
+const initialFolder = {folderId: '1', name: 'notes', noteCount: 0};
 
 type FolderListProps = {
   folders: Folder[];
@@ -30,6 +29,9 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [isCreateModal, setIsCreateModal] = useState(false);
+  const [updateFolderName, setUpdateFolderName] = useState('');
+  const [updateFolderId, setUpdateFolderId] = useState('');
   const {height} = useWindowDimensions();
   const dispatch = useAppDispatch();
   const folders = useAppSelector(state => state.folders);
@@ -38,7 +40,6 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: headerTitle,
-      headerRight: () => <EditButton />,
     });
   }, [navigation, headerTitle]);
 
@@ -51,6 +52,20 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
 
   const handleShowModal = () => {
     setShowModal(!showModal);
+  };
+
+  const handleShowCreateModal = () => {
+    setIsCreateModal(true);
+    setUpdateFolderName('');
+    setUpdateFolderId('');
+    handleShowModal();
+  };
+
+  const handleShowEditModal = (folderName: string, folderId: string) => {
+    setIsCreateModal(false);
+    setUpdateFolderName(folderName);
+    setUpdateFolderId(folderId);
+    handleShowModal();
   };
 
   const navigateToNotes = (folderId: string, folderName: string) => {
@@ -75,14 +90,6 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     navigation.navigate('Edit', {...props});
   };
 
-  const EditButton = () => {
-    return (
-      <TouchableOpacity>
-        <AppText isI18n={true}>edit</AppText>
-      </TouchableOpacity>
-    );
-  };
-
   const FolderList = ({folders}: FolderListProps) => {
     return (
       <>
@@ -103,7 +110,10 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
                 },
               ]}>
               <TouchableOpacity
-                onPress={() => navigateToNotes(folder.id, folder.name)}
+                onPress={() => navigateToNotes(folder.folderId, folder.name)}
+                onLongPress={() =>
+                  handleShowEditModal(folder.name, folder.folderId)
+                }
                 style={[styles.sectionItemContainer]}>
                 <Image
                   source={require('../../assets/image/folder.png')}
@@ -128,8 +138,11 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
         },
       ]}>
       <FolderCreateModal
+        isCreate={isCreateModal}
         showModal={showModal}
         handleShowModal={handleShowModal}
+        updateFolderName={updateFolderName}
+        updateFolderId={updateFolderId}
       />
       <ScrollView
         stickyHeaderIndices={[0, 2]}
@@ -151,7 +164,9 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
         <View style={styles.largeBlank} />
       </ScrollView>
       <Footer>
-        <TouchableOpacity onPress={handleShowModal} style={styles.footerIcon}>
+        <TouchableOpacity
+          onPress={handleShowCreateModal}
+          style={styles.footerIcon}>
           <Image
             source={require('../../assets/image/add_folder.png')}
             style={styles.footerIcon}
