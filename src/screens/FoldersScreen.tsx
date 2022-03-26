@@ -86,33 +86,34 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
   const FolderList = ({folders}: FolderListProps) => {
     return (
       <>
-        {folders.map((folder, index) => (
-          <View
-            key={index.toString()}
-            style={[
-              styles.sectionItemContainerWrapper,
-              // eslint-disable-next-line react-native/no-inline-styles
-              {
-                backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
-                borderTopLeftRadius: index === 0 ? 5 : 0,
-                borderTopRightRadius: index === 0 ? 5 : 0,
-                borderBottomLeftRadius: index === folders.length - 1 ? 5 : 0,
-                borderBottomRightRadius: index === folders.length - 1 ? 5 : 0,
-                borderBottomWidth: index === folders.length - 1 ? 2 : 0,
-              },
-            ]}>
-            <TouchableOpacity
-              onPress={() => navigateToNotes(folder.id, folder.name)}
-              style={[styles.sectionItemContainer]}>
-              <Image
-                source={require('../../assets/image/folder.png')}
-                style={styles.folderImage}
-              />
-              <Text style={styles.folderName}>{folder.name}</Text>
-              <Text style={styles.noteCount}>{folder.noteCount}</Text>
-            </TouchableOpacity>
-          </View>
-        ))}
+        {folders !== undefined &&
+          folders.map((folder, index) => (
+            <View
+              key={index.toString()}
+              style={[
+                styles.sectionItemContainerWrapper,
+                // eslint-disable-next-line react-native/no-inline-styles
+                {
+                  backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
+                  borderTopLeftRadius: index === 0 ? 5 : 0,
+                  borderTopRightRadius: index === 0 ? 5 : 0,
+                  borderBottomLeftRadius: index === folders.length - 1 ? 5 : 0,
+                  borderBottomRightRadius: index === folders.length - 1 ? 5 : 0,
+                  borderBottomWidth: index === folders.length - 1 ? 2 : 0,
+                },
+              ]}>
+              <TouchableOpacity
+                onPress={() => navigateToNotes(folder.id, folder.name)}
+                style={[styles.sectionItemContainer]}>
+                <Image
+                  source={require('../../assets/image/folder.png')}
+                  style={styles.folderImage}
+                />
+                <Text style={styles.folderName}>{folder.name}</Text>
+                <Text style={styles.noteCount}>{folder.noteCount}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
       </>
     );
   };

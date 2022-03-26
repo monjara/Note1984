@@ -18,18 +18,15 @@ const notesSlice = createSlice({
       state.push(action.payload);
     },
     editNote: (state = initialState, action: PayloadAction<Note>) => {
-      if (action.payload.noteId !== undefined) {
-        state.map(note =>
-          note.noteId === action.payload.noteId
-            ? console.log('aaaa')
-            : console.log('bbbb'),
-        );
+      const note = state.find(note => note.noteId === action.payload.noteId);
+      if (note) {
+        note.title = action.payload.title;
+        note.text = action.payload.text;
+        note.createdAt = action.payload.createdAt;
       }
     },
     removeNote: (state, action: PayloadAction<Note>) => {
-      if (action.payload.noteId !== undefined) {
-        state.filter(note => note.noteId !== action.payload.noteId);
-      }
+      state.filter(note => note.noteId !== action.payload.noteId);
     },
   },
 });
