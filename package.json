@@ -17,6 +17,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "@reduxjs/toolkit": "^1.8.0",
+    "@types/react": "^17",
     "i18n-js": "^3.8.0",
     "immer": "^9.0.12",
     "react": "17.0.2",
