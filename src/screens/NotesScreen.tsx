@@ -61,7 +61,6 @@ const NotesScreen = ({navigation}: ScreenProps) => {
             folderId,
             title: '',
             text: '',
-            created_at: '',
             isEdit,
           };
 
@@ -89,11 +88,15 @@ const NotesScreen = ({navigation}: ScreenProps) => {
               onPress={() => navigateToEdit(true, {...note})}
               style={styles.sectionItemContainer}>
               <View style={styles.sectionItemDetailArea}>
-                <AppText originalStyle={styles.sectionItemTitle}>
-                  {note.title}
-                </AppText>
+                <View style={styles.sectionItemTitleArea}>
+                  <Text numberOfLines={1} style={styles.sectionItemTitle}>
+                    {note.title}
+                  </Text>
+                </View>
                 <View style={styles.sectionItemDescriptionArea}>
-                  <Text>{note.text} </Text>
+                  <Text numberOfLines={1}
+                  style={styles.sectionItemDescription}
+                  >{note.text} </Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -166,10 +169,18 @@ const styles = StyleSheet.create({
   sectionItemDetailArea: {
     marginLeft: 10,
   },
+  sectionItemTitleArea: {
+    flexDirection: 'row',
+  },
   sectionItemTitle: {
     fontSize: 20,
+    fontFamily: 'JetBrainsMono-Bold',
   },
   sectionItemDescriptionArea: {
+    flexDirection: 'row',
+  },
+  sectionItemDescription: {
+    fontFamily: 'JetBrainsMono-Regular',
     flexDirection: 'row',
   },
   smallBlank: {

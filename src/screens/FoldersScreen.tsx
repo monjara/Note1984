@@ -83,7 +83,6 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
       folderId: '1',
       title: '',
       text: '',
-      created_at: '',
       isEdit: false,
     };
 
