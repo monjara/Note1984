@@ -44,6 +44,8 @@ const MainStack = () => {
           backgroundColor: 'gainsboro',
         },
         headerShadowVisible: false,
+        headerBackTitleVisible: false,
+        headerBackImageSource: require('../../assets/image/backButton-30.png'),
       }}>
       <Stack.Screen name="Folders" component={FoldersScreen} />
       <Stack.Screen name="Notes" component={NotesScreen} />

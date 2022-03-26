@@ -110,7 +110,14 @@ const NotesScreen = ({navigation}: ScreenProps) => {
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={styles.container}>
-        <Title title={folderName} height={54} isI18n={false} />
+        <Title
+          title={folderName}
+          height={54}
+          isI18n={false}
+          style={{
+            backgroundColor: 'gainsboro',
+          }}
+        />
         <Search height={height * 0.06} />
         <View style={styles.smallBlank} />
         <NoteList notes={notes} />

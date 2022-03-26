@@ -112,6 +112,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
               <TouchableOpacity
                 onPress={() => navigateToNotes(folder.folderId, folder.name)}
                 onLongPress={() =>
+                  folder.folderId !== '1' &&
                   handleShowEditModal(folder.name, folder.folderId)
                 }
                 style={[styles.sectionItemContainer]}>
