@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal,
   StyleSheet,
@@ -31,7 +31,13 @@ const FolderCreateModal = ({
   updateFolderId,
 }: FolderModalProps) => {
   const dispatch = useAppDispatch();
-  const [folderName, setFolderName] = useState(isCreate ? '' : updateFolderName);
+  const [folderName, setFolderName] = useState(
+    isCreate ? '' : updateFolderName,
+  );
+
+  useEffect(() => {
+    setFolderName(updateFolderName);
+  }, [updateFolderName]);
 
   const closeModal = () => {
     if (showModal) {
