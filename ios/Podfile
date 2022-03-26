@@ -12,6 +12,8 @@ target 'Note1984' do
     :hermes_enabled => false
   )
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'Note1984Tests' do
     inherit! :complete
     # Pods for testing
