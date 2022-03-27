@@ -5,6 +5,7 @@ export default {
   search: '検索',
   edit: '編集',
   Done: '完了',
+  delete: '削除',
   new_folder: '新規フォルダ',
   update_folder: 'フォルダ名変更',
   input_folder_name: 'このフォルダの名称を入力してください。',

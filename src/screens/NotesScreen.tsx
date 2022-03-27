@@ -1,5 +1,6 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {
+  Animated,
   Image,
   ScrollView,
   StyleSheet,
@@ -9,25 +10,32 @@ import {
   View,
 } from 'react-native';
 import {useRoute} from '@react-navigation/native';
+import {
+  gestureHandlerRootHOC,
+  Swipeable,
+  TouchableHighlight,
+} from 'react-native-gesture-handler';
 import uuid from 'react-native-uuid';
 
 import Footer from '../components/Footer';
 import Search from '../components/Search';
 import Title from '../components/Title';
-import {Note} from '../redux/NotesReducer';
+import {Note, removeNote} from '../redux/NotesReducer';
 import {
   EditScreenParamList,
   NotesScreenRouteProp,
   ScreenProps,
 } from '../stacks/MainStack';
-import {useAppSelector} from '../utils/hooks';
+import {useAppDispatch, useAppSelector} from '../utils/hooks';
+import {reduceNotesCount} from '../redux/FoldersReducer';
 
 type NoteListProps = {
   notes: Note[];
 };
 
-const NotesScreen = ({navigation}: ScreenProps) => {
+const NotesScreen = gestureHandlerRootHOC(({navigation}: ScreenProps) => {
   const {height} = useWindowDimensions();
+  const dispatch = useAppDispatch();
   const [headerTitle, setHeaderTitle] = useState('');
 
   const route = useRoute<NotesScreenRouteProp>();
@@ -66,7 +74,45 @@ const NotesScreen = ({navigation}: ScreenProps) => {
     navigation.navigate('Edit', {...props});
   };
 
+  const deleteNote = (noteId: string, folderId: string) => {
+    dispatch(removeNote({noteId}));
+    dispatch(reduceNotesCount({folderId}));
+  };
+
   const NoteList = ({notes}: NoteListProps) => {
+    const renderRightActions = (
+      _progress: Animated.AnimatedInterpolation,
+      dragX: Animated.AnimatedInterpolation,
+      noteId: string,
+      folderId: string,
+    ) => {
+      const trans = dragX.interpolate({
+        inputRange: [0, 50, 100, 101],
+        outputRange: [0, 0, 0, 1],
+        extrapolate: 'clamp',
+      });
+      return (
+        <TouchableHighlight
+          onPress={() => deleteNote(noteId, folderId)}
+          style={{
+            backgroundColor: 'black',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '97%',
+          }}>
+          <Animated.Text
+            style={{
+              transform: [{translateX: trans}],
+              color: 'white',
+              fontFamily: 'JetBrainsMono-Regular',
+              paddingHorizontal: 15,
+            }}>
+            delete
+          </Animated.Text>
+        </TouchableHighlight>
+      );
+    };
+
     return (
       <>
         {notes.map((note, index) => (
@@ -83,22 +129,45 @@ const NotesScreen = ({navigation}: ScreenProps) => {
                 borderBottomWidth: index === notes.length - 1 ? 2 : 0,
               },
             ]}>
-            <TouchableOpacity
-              onPress={() => navigateToEdit(true, {...note})}
-              style={styles.sectionItemContainer}>
-              <View style={styles.sectionItemDetailArea}>
-                <View style={styles.sectionItemTitleArea}>
-                  <Text numberOfLines={1} style={styles.sectionItemTitle}>
-                    {note.title}
-                  </Text>
+            <Swipeable
+              containerStyle={styles.sectionItemContainer}
+              childrenContainerStyle={{flex: 1}}
+              renderRightActions={(progress, dragX) =>
+                renderRightActions(progress, dragX, note.noteId, note.folderId)
+              }>
+              <TouchableOpacity
+                onPress={() => navigateToEdit(true, {...note})}
+                style={styles.sectionItemContainer}>
+                <View style={styles.sectionItemDetailArea}>
+                  <View style={styles.sectionItemTitleArea}>
+                    {note.title !== '' ? (
+                      <Text numberOfLines={1} style={styles.sectionItemTitle}>
+                        {note.title}
+                      </Text>
+                    ) : (
+                      <Text numberOfLines={1} style={styles.sectionItemNoTitle}>
+                        {'no title'}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={styles.sectionItemDescriptionArea}>
+                    {note.text !== '' ? (
+                      <Text
+                        numberOfLines={1}
+                        style={styles.sectionItemDescription}>
+                        {note.text}{' '}
+                      </Text>
+                    ) : (
+                      <Text
+                        numberOfLines={1}
+                        style={styles.sectionItemNoDescription}>
+                        {'no text'}
+                      </Text>
+                    )}
+                  </View>
                 </View>
-                <View style={styles.sectionItemDescriptionArea}>
-                  <Text numberOfLines={1} style={styles.sectionItemDescription}>
-                    {note.text}{' '}
-                  </Text>
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </Swipeable>
           </View>
         ))}
       </>
@@ -137,7 +206,7 @@ const NotesScreen = ({navigation}: ScreenProps) => {
       </Footer>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   containerWrapper: {
@@ -150,7 +219,7 @@ const styles = StyleSheet.create({
   },
   sectionItemContainerWrapper: {
     width: '100%',
-    height: 70,
+    height: 65,
     backgroundColor: 'white',
     alignSelf: 'center',
     alignItems: 'center',
@@ -161,7 +230,7 @@ const styles = StyleSheet.create({
   sectionItemContainer: {
     alignSelf: 'center',
     width: '100%',
-    height: 70,
+    height: 65,
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -175,11 +244,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'JetBrainsMono-Bold',
   },
+  sectionItemNoTitle: {
+    fontSize: 20,
+    color: 'gainsboro',
+    fontFamily: 'JetBrainsMono-Bold',
+  },
   sectionItemDescriptionArea: {
     flexDirection: 'row',
   },
   sectionItemDescription: {
     fontFamily: 'JetBrainsMono-Regular',
+    flexDirection: 'row',
+  },
+  sectionItemNoDescription: {
+    fontFamily: 'JetBrainsMono-Regular',
+    color: 'gainsboro',
     flexDirection: 'row',
   },
   smallBlank: {
