@@ -1,11 +1,15 @@
 import React from 'react';
-import {StatusBar, useColorScheme} from 'react-native';
+import {LogBox, StatusBar, useColorScheme} from 'react-native';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 
 import MainStack from './stacks/MainStack';
-import { store, persistor } from './redux/store';
+import {store, persistor} from './redux/store';
+
+LogBox.ignoreLogs([
+  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
+]);
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
