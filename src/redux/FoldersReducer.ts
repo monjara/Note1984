@@ -6,9 +6,7 @@ export type Folder = {
   noteCount: number;
 };
 
-type HandleNotesCountType = {
-  folderId: string;
-};
+type HandleNotesCountType = Omit<Folder, 'name' | 'noteCount'>;
 
 const initialState: Folder[] = [{folderId: '1', name: 'notes', noteCount: 0}];
 

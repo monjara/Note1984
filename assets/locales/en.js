@@ -5,6 +5,7 @@ export default {
   search: 'search',
   edit: 'edit',
   Done: 'Done',
+  delete: 'delete',
   new_folder: 'New Folder',
   update_folder: 'Update Folder',
   input_folder_name: 'Enter a name for this folder.',
