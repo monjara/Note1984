@@ -1,5 +1,11 @@
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
-import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Keyboard,
+} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {useAppDispatch} from '../utils/hooks';
@@ -14,6 +20,7 @@ const EditScreen = () => {
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
+  const [textInputHeight, setTextInputHeight] = useState(2000);
 
   const route = useRoute<EditScreenRouteProp>();
   const noteId = route.params.noteId;
@@ -57,10 +64,11 @@ const EditScreen = () => {
         dispatch(addNotesCount({folderId}));
       }
     }
+    Keyboard.dismiss();
   }, [dispatch, text, title]);
 
   return (
-    <>
+    <View style={style.container}>
       <TextInput
         multiline={true}
         value={title}
@@ -73,15 +81,24 @@ const EditScreen = () => {
         multiline={true}
         value={text}
         placeholder={'text'}
+        textAlignVertical={'top'}
         placeholderTextColor={'silver'}
         onChangeText={txt => setText(txt)}
-        style={style.textArea}
+        onContentSizeChange={e => {
+          e.nativeEvent.contentSize.height > 2000 &&
+            setTextInputHeight(e.nativeEvent.contentSize.height);
+        }}
+        style={[style.textArea, {height: textInputHeight}]}
       />
-    </>
+    </View>
   );
 };
 
 const style = StyleSheet.create({
+  container: {
+    width: '95%',
+    alignSelf: 'center',
+  },
   titleArea: {
     fontSize: 26,
     fontFamily: 'JetBrainsMono-Bold',

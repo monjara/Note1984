@@ -23,8 +23,11 @@ const notesSlice = createSlice({
         note.text = action.payload.text;
       }
     },
-    removeNote: (state, action: PayloadAction<Note>) => {
-      state.filter(note => note.noteId !== action.payload.noteId);
+    removeNote: (
+      state = initialState,
+      action: PayloadAction<Omit<Note, 'folderId' | 'title' | 'text'>>,
+    ) => {
+      return state.filter(note => note.noteId !== action.payload.noteId);
     },
   },
 });
