@@ -3,7 +3,6 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -12,21 +11,18 @@ import uuid from 'react-native-uuid';
 
 import {useAppDispatch, useAppSelector} from '../utils/hooks';
 import {initialize} from '../redux/InitialReducer';
-import {addFolder, Folder} from '../redux/FoldersReducer';
+import {addFolder} from '../redux/FoldersReducer';
 import {EditScreenParamList, ScreenProps} from '../stacks/MainStack';
-import I18n from '../../assets/locales/i18n';
 import Search from '../components/Search';
 import Footer from '../components/Footer';
 import Title from '../components/Title';
 import FolderCreateModal from '../components/FolderCreateModal';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import FolderList from '../components/FolderList';
 
 const initialFolder = {folderId: '1', name: 'notes', noteCount: 0};
 
-type FolderListProps = {
-  folders: Folder[];
-};
-
-const FoldersScreen = ({navigation}: ScreenProps) => {
+const FoldersScreen = gestureHandlerRootHOC(({navigation}: ScreenProps) => {
   const screenTitle = 'folder';
   const [headerTitle, setHeaderTitle] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -69,13 +65,6 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     handleShowModal();
   };
 
-  const navigateToNotes = (folderId: string, folderName: string) => {
-    navigation.navigate('Notes', {
-      folderId,
-      folderName,
-    });
-  };
-
   const navigateToEdit = () => {
     const noteId = uuid.v4().toString();
 
@@ -88,47 +77,6 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
     };
 
     navigation.navigate('Edit', {...props});
-  };
-
-  const FolderList = ({folders}: FolderListProps) => {
-    return (
-      <>
-        {folders !== undefined &&
-          folders.map((folder, index) => (
-            <View
-              key={index.toString()}
-              style={[
-                styles.sectionItemContainerWrapper,
-                // eslint-disable-next-line react-native/no-inline-styles
-                {
-                  backgroundColor: showModal ? 'rgba(0,0,0,0)' : 'white',
-                  borderTopLeftRadius: index === 0 ? 5 : 0,
-                  borderTopRightRadius: index === 0 ? 5 : 0,
-                  borderBottomLeftRadius: index === folders.length - 1 ? 5 : 0,
-                  borderBottomRightRadius: index === folders.length - 1 ? 5 : 0,
-                  borderBottomWidth: index === folders.length - 1 ? 2 : 0,
-                },
-              ]}>
-              <TouchableOpacity
-                onPress={() => navigateToNotes(folder.folderId, folder.name)}
-                onLongPress={() =>
-                  folder.folderId !== '1' &&
-                  handleShowEditModal(folder.name, folder.folderId)
-                }
-                style={[styles.sectionItemContainer]}>
-                <Image
-                  source={require('../../assets/image/folder.png')}
-                  style={styles.folderImage}
-                />
-                <Text style={styles.folderName}>
-                  {folder.folderId === '1' ? I18n.t(folder.name) : folder.name}
-                </Text>
-                <Text style={styles.noteCount}>{folder.noteCount}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-      </>
-    );
   };
 
   return (
@@ -163,7 +111,12 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
         />
         <Search height={height * 0.06} />
         <View style={styles.smallBlank} />
-        <FolderList folders={folders} />
+        <FolderList
+          folders={folders}
+          navigation={navigation}
+          showModal={showModal}
+          handleShowEditModal={handleShowEditModal}
+        />
         <View style={styles.largeBlank} />
       </ScrollView>
       <Footer>
@@ -184,7 +137,7 @@ const FoldersScreen = ({navigation}: ScreenProps) => {
       </Footer>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   containerWrapper: {

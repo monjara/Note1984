@@ -6,7 +6,7 @@ export type Folder = {
   noteCount: number;
 };
 
-type HandleNotesCountType = Omit<Folder, 'name' | 'noteCount'>;
+type OnlyFolderIdFolderType = Omit<Folder, 'name' | 'noteCount'>;
 
 const initialState: Folder[] = [{folderId: '1', name: 'notes', noteCount: 0}];
 
@@ -25,12 +25,15 @@ const foldersSlice = createSlice({
         folder.name = action.payload.name;
       }
     },
-    removeFolder: (state, action: PayloadAction<Folder>) => {
-      state.filter(folder => {
-        folder.folderId !== action.payload.folderId;
-      });
+    removeFolder: (
+      state = initialState,
+      action: PayloadAction<OnlyFolderIdFolderType>,
+    ) => {
+      return state.filter(
+        folder => folder.folderId !== action.payload.folderId,
+      );
     },
-    addNotesCount: (state, action: PayloadAction<HandleNotesCountType>) => {
+    addNotesCount: (state, action: PayloadAction<OnlyFolderIdFolderType>) => {
       const folder = state.find(
         folder => folder.folderId === action.payload.folderId,
       );
@@ -38,7 +41,10 @@ const foldersSlice = createSlice({
         folder.noteCount += 1;
       }
     },
-    reduceNotesCount: (state, action: PayloadAction<HandleNotesCountType>) => {
+    reduceNotesCount: (
+      state,
+      action: PayloadAction<OnlyFolderIdFolderType>,
+    ) => {
       const folder = state.find(
         folder => folder.folderId === action.payload.folderId,
       );

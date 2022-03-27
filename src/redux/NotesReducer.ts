@@ -29,8 +29,14 @@ const notesSlice = createSlice({
     ) => {
       return state.filter(note => note.noteId !== action.payload.noteId);
     },
+    removeNotesRelatedFolder: (
+      state = initialState,
+      action: PayloadAction<Omit<Note, 'noteId' | 'title' | 'text'>>,
+    ) => {
+      return state.filter(note => note.folderId !== action.payload.folderId);
+    },
   },
 });
 
-export const {addNote, editNote, removeNote} = notesSlice.actions;
+export const {addNote, editNote, removeNote, removeNotesRelatedFolder} = notesSlice.actions;
 export default notesSlice.reducer;
