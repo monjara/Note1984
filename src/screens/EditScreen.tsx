@@ -21,11 +21,11 @@ const EditScreen = () => {
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [textInputHeight, setTextInputHeight] = useState(2000);
+  const [isEdit, setIsEdit] = useState(false);
 
   const route = useRoute<EditScreenRouteProp>();
   const noteId = route.params.noteId;
   const folderId = route.params.folderId;
-  const isEdit = route.params.isEdit;
 
   const DoneButton = React.memo(() => {
     return (
@@ -45,6 +45,7 @@ const EditScreen = () => {
     if (route.params !== undefined) {
       setTitle(route.params.title);
       setText(route.params.text);
+      setIsEdit(route.params.isEdit);
     }
   }, [route.params]);
 
@@ -64,8 +65,9 @@ const EditScreen = () => {
         dispatch(addNotesCount({folderId}));
       }
     }
+    setIsEdit(true);
     Keyboard.dismiss();
-  }, [dispatch, text, title]);
+  }, [dispatch, text, title, isEdit]);
 
   return (
     <View style={style.container}>
