@@ -19,7 +19,7 @@ const foldersSlice = createSlice({
     },
     editFolder: (state, action: PayloadAction<Omit<Folder, 'noteCount'>>) => {
       const folder = state.find(
-        folder => folder.folderId === action.payload.folderId,
+        stateFolder => stateFolder.folderId === action.payload.folderId,
       );
       if (folder) {
         folder.name = action.payload.name;
@@ -35,7 +35,7 @@ const foldersSlice = createSlice({
     },
     addNotesCount: (state, action: PayloadAction<OnlyFolderIdFolderType>) => {
       const folder = state.find(
-        folder => folder.folderId === action.payload.folderId,
+        stateFolder => stateFolder.folderId === action.payload.folderId,
       );
       if (folder) {
         folder.noteCount += 1;
@@ -46,7 +46,7 @@ const foldersSlice = createSlice({
       action: PayloadAction<OnlyFolderIdFolderType>,
     ) => {
       const folder = state.find(
-        folder => folder.folderId === action.payload.folderId,
+        stateFolder => stateFolder.folderId === action.payload.folderId,
       );
       if (folder) {
         folder.noteCount -= 1;

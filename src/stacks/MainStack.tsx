@@ -44,7 +44,7 @@ const MainStack = () => {
         },
         headerShadowVisible: false,
         headerBackTitleVisible: false,
-        headerBackVisible:false,
+        headerBackVisible: false,
       }}>
       <Stack.Screen name="Folders" component={FoldersScreen} />
       <Stack.Screen name="Notes" component={NotesScreen} />

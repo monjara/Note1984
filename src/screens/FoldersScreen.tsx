@@ -45,7 +45,7 @@ const FoldersScreen = gestureHandlerRootHOC(({navigation}: ScreenProps) => {
       dispatch(addFolder(initialFolder));
       dispatch(initialize(false));
     }
-  }, [initFlg]);
+  }, [dispatch, initFlg]);
 
   const handleShowModal = () => {
     setShowModal(!showModal);

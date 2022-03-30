@@ -53,19 +53,14 @@ const FolderList = ({
     return (
       <TouchableHighlight
         onPress={() => deleteFolder(folderId)}
-        style={{
-          backgroundColor: 'black',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}>
+        style={styles.deleteButton}>
         <Animated.Text
-          style={{
-            transform: [{translateX: trans}],
-            color: 'white',
-            fontFamily: 'JetBrainsMono-Regular',
-            paddingHorizontal: 15,
-          }}>
+          style={[
+            {
+              transform: [{translateX: trans}],
+            },
+            styles.deleteButtonText,
+          ]}>
           delete
         </Animated.Text>
       </TouchableHighlight>
@@ -93,7 +88,7 @@ const FolderList = ({
             {folder.folderId !== '1' ? (
               <Swipeable
                 containerStyle={styles.sectionItemContainer}
-                childrenContainerStyle={{flex: 1}}
+                childrenContainerStyle={styles.flexContainer}
                 renderRightActions={(progress, dragX) =>
                   renderRightActions(progress, dragX, folder.folderId)
                 }>
@@ -140,6 +135,9 @@ const FolderList = ({
 };
 
 const styles = StyleSheet.create({
+  flexContainer: {
+    flex: 1,
+  },
   sectionItemContainerWrapper: {
     alignSelf: 'center',
     alignItems: 'center',
@@ -166,6 +164,17 @@ const styles = StyleSheet.create({
   },
   noteCount: {
     marginEnd: 10,
+  },
+  deleteButton: {
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontFamily: 'JetBrainsMono-Regular',
+    paddingHorizontal: 15,
   },
 });
 

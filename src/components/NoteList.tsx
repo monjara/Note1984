@@ -44,19 +44,9 @@ const NoteList = ({notes, navigation}: NoteListProps) => {
     return (
       <TouchableHighlight
         onPress={() => deleteNote(noteId, folderId)}
-        style={{
-          backgroundColor: 'black',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '97%',
-        }}>
+        style={styles.deleteButton}>
         <Animated.Text
-          style={{
-            transform: [{translateX: trans}],
-            color: 'white',
-            fontFamily: 'JetBrainsMono-Regular',
-            paddingHorizontal: 15,
-          }}>
+          style={[styles.deleteButtonText, {transform: [{translateX: trans}]}]}>
           delete
         </Animated.Text>
       </TouchableHighlight>
@@ -81,7 +71,7 @@ const NoteList = ({notes, navigation}: NoteListProps) => {
           ]}>
           <Swipeable
             containerStyle={styles.sectionItemContainer}
-            childrenContainerStyle={{flex: 1}}
+            childrenContainerStyle={styles.flexContainer}
             renderRightActions={(progress, dragX) =>
               renderRightActions(progress, dragX, note.noteId, note.folderId)
             }>
@@ -125,6 +115,9 @@ const NoteList = ({notes, navigation}: NoteListProps) => {
 };
 
 const styles = StyleSheet.create({
+  flexContainer: {
+    flex: 1,
+  },
   sectionItemContainerWrapper: {
     width: '100%',
     height: 65,
@@ -168,6 +161,17 @@ const styles = StyleSheet.create({
     fontFamily: 'JetBrainsMono-Regular',
     color: 'gainsboro',
     flexDirection: 'row',
+  },
+  deleteButton: {
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '97%',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontFamily: 'JetBrainsMono-Regular',
+    paddingHorizontal: 15,
   },
 });
 export default NoteList;

@@ -63,13 +63,11 @@ const NotesScreen = gestureHandlerRootHOC(({navigation}: ScreenProps) => {
           title={folderName}
           height={54}
           isI18n={false}
-          style={{
-            backgroundColor: 'gainsboro',
-          }}
+          style={styles.title}
         />
         <Search height={height * 0.06} />
         <View style={styles.smallBlank} />
-        <NoteList notes={notes} navigation={navigation}/>
+        <NoteList notes={notes} navigation={navigation} />
         <View style={styles.largeBlank} />
       </ScrollView>
       <Footer justifyContent={'flex-end'}>
@@ -92,6 +90,9 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     width: '88%',
+  },
+  title: {
+    backgroundColor: 'gainsboro',
   },
   smallBlank: {
     height: 20,

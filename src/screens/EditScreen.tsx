@@ -67,7 +67,7 @@ const EditScreen = () => {
     }
     setIsEdit(true);
     Keyboard.dismiss();
-  }, [dispatch, text, title, isEdit]);
+  }, [dispatch, noteId, folderId, text, title, isEdit]);
 
   return (
     <View style={style.container}>

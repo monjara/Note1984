@@ -17,7 +17,9 @@ const notesSlice = createSlice({
       state.push(action.payload);
     },
     editNote: (state = initialState, action: PayloadAction<Note>) => {
-      const note = state.find(note => note.noteId === action.payload.noteId);
+      const note = state.find(
+        stateNote => stateNote.noteId === action.payload.noteId,
+      );
       if (note) {
         note.title = action.payload.title;
         note.text = action.payload.text;
@@ -38,5 +40,6 @@ const notesSlice = createSlice({
   },
 });
 
-export const {addNote, editNote, removeNote, removeNotesRelatedFolder} = notesSlice.actions;
+export const {addNote, editNote, removeNote, removeNotesRelatedFolder} =
+  notesSlice.actions;
 export default notesSlice.reducer;

@@ -90,7 +90,7 @@ const FolderCreateModal = ({
         </View>
         <View style={styles.modalLowerhalf}>
           <TouchableOpacity onPress={closeModal} style={styles.buttonWrapper}>
-            <View style={[styles.button, {borderRightWidth: 1}]}>
+            <View style={[styles.button, styles.cancelButtonWrapper]}>
               <AppText isI18n={true}>{'cancel'}</AppText>
             </View>
           </TouchableOpacity>
@@ -150,6 +150,9 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     width: '35%',
+  },
+  cancelButtonWrapper: {
+    borderRightWidth: 1,
   },
   button: {
     width: '100%',
